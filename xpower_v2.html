@@ -1,0 +1,1713 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>xPower · Sales Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a;--s1:#111;--s2:#191919;--s3:#222;--s4:#2a2a2a;--s5:#333;
+  --b1:rgba(255,255,255,.04);--b2:rgba(255,255,255,.08);--b3:rgba(255,255,255,.14);--b4:rgba(255,255,255,.22);
+  --t1:#f0f0f0;--t2:#888;--t3:#444;--wh:#fff;--bl:#000;
+  --ok:#4ade80;--warn:#fbbf24;--err:#f87171;
+  --r:10px;--r2:14px;--f:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overscroll-behavior:none}
+body{font-family:var(--f);background:var(--bg);color:var(--t1);max-width:430px;margin:0 auto;min-height:100vh;overflow-x:hidden}
+.app{padding-bottom:84px}
+
+/* HDR */
+.hdr{position:sticky;top:0;z-index:200;background:rgba(10,10,10,.96);backdrop-filter:blur(20px);border-bottom:1px solid var(--b2);padding:11px 16px;display:flex;align-items:center;justify-content:space-between}
+.logo{display:flex;align-items:center;gap:9px}
+.lmark{width:30px;height:30px;border-radius:7px;background:var(--wh);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:var(--bl);flex-shrink:0}
+.ltext{font-size:14px;font-weight:700;letter-spacing:-.3px}
+.lsub{font-size:9px;color:var(--t3);letter-spacing:.7px;text-transform:uppercase;margin-top:1px}
+.hdr-r{display:flex;align-items:center;gap:8px}
+.ipill{font-size:10px;font-weight:600;padding:4px 10px;border-radius:20px;border:1px solid var(--b2);color:var(--t2);cursor:pointer;transition:all .14s;white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis}
+.ipill:active{background:var(--s2)}
+.mtgl{display:flex;background:var(--s2);border:1px solid var(--b2);border-radius:8px;padding:3px;gap:2px}
+.mtb{padding:5px 10px;border-radius:6px;border:none;cursor:pointer;font-family:var(--f);font-size:11px;font-weight:600;color:var(--t3);background:transparent;transition:all .14s}
+.mtb.on{background:var(--wh);color:var(--bl)}
+
+/* PAGES */
+.page{display:none}.page.active{display:block}
+
+/* WIZARD */
+.wiz{padding:14px 16px}
+.prog-wrap{margin-bottom:16px;display:none}
+.prog-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.prog-lbl{font-size:10px;font-weight:600;color:var(--t3)}
+.prog-co{font-size:10px;color:var(--t2);font-weight:500;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prog-tr{height:2px;background:var(--s4);border-radius:2px;overflow:hidden}
+.prog-fl{height:100%;border-radius:2px;background:var(--wh);transition:width .35s ease}
+
+.sw{display:none;animation:fu .18s ease}.sw.active{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.slbl{display:block;font-size:9px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--t3);margin-bottom:12px}
+
+/* STEP 0 */
+.s0-hero{padding:8px 0 20px}
+.s0-from{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--t3);margin-bottom:12px}
+.s0-title{font-size:26px;font-weight:800;color:var(--t1);margin-bottom:8px;letter-spacing:-.7px;line-height:1.15}
+.s0-title em{font-style:normal;color:var(--wh)}
+.s0-sub{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:24px}
+.ind-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.ic{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r2);padding:14px 13px;cursor:pointer;transition:all .14s;position:relative;overflow:hidden}
+.ic:active{transform:scale(.97)}
+.ic.sel{background:var(--s2);border-color:var(--b4)}
+.ic.sel::after{content:'✓';position:absolute;top:10px;right:10px;width:16px;height:16px;border-radius:50%;background:var(--wh);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:var(--bl)}
+.ic-ico{font-size:22px;margin-bottom:9px}
+.ic-nm{font-size:12px;font-weight:700;margin-bottom:2px;color:var(--t1)}
+.ic-sb{font-size:10px;color:var(--t3);line-height:1.4}
+.btn-full{width:100%;padding:14px;border-radius:var(--r);background:var(--wh);border:none;cursor:pointer;font-family:var(--f);font-size:14px;font-weight:700;color:var(--bl);margin-top:12px;opacity:.2;transition:opacity .14s,transform .1s}
+.btn-full:not(:disabled){opacity:1}
+.btn-full:active:not(:disabled){transform:scale(.99);opacity:.88}
+
+/* INN */
+.inn-wrap{position:relative;margin-bottom:4px}
+.inn-inp{width:100%;background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);padding:13px 50px 13px 14px;font-family:var(--f);font-size:15px;color:var(--t1);outline:none;transition:border-color .14s;letter-spacing:.3px}
+.inn-inp:focus{border-color:var(--b4)}
+.inn-inp::placeholder{color:var(--t3);font-size:13px}
+.inn-go{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--wh);border:none;border-radius:7px;width:34px;height:34px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;transition:opacity .12s}
+.inn-go:active{opacity:.7}
+.inn-ldr{text-align:center;padding:12px;color:var(--t3);font-size:12px;display:none}
+.da::after{content:'...';animation:da 1.2s steps(4) infinite}
+@keyframes da{0%,100%{content:''}33%{content:'.'}66%{content:'..'}}
+
+/* Co card */
+.co-card{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r2);overflow:hidden;margin-top:8px;display:none}
+.co-hd{padding:11px 13px;border-bottom:1px solid var(--b1);display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.co-nm{font-size:13px;font-weight:700;line-height:1.4;flex:1}
+.st{flex-shrink:0;font-size:9px;font-weight:700;padding:3px 7px;border-radius:5px;text-transform:uppercase;letter-spacing:.4px}
+.st.ok{background:rgba(74,222,128,.1);color:var(--ok)}.st.err{background:rgba(248,113,113,.1);color:var(--err)}
+.co-body{padding:10px 13px;display:flex;flex-direction:column;gap:6px}
+.ci-sec{font-size:9px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--t3);padding:3px 0 1px;border-top:1px solid var(--b1);margin-top:2px}
+.ci-row{display:flex;gap:8px;align-items:flex-start}
+.ci-ico{font-size:12px;flex-shrink:0;margin-top:2px;opacity:.4;width:16px}
+.ci-lbl{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:1px;font-weight:600}
+.ci-val{font-size:12px;font-weight:500;line-height:1.4;color:var(--t2)}
+.chip{display:inline-block;font-size:11px;font-weight:500;color:var(--t1);background:var(--s3);padding:3px 9px;border-radius:5px;margin:2px 2px 2px 0;cursor:pointer;border:1px solid var(--b2);transition:background .1s}
+.chip:active{background:var(--s4)}
+
+/* Lock */
+.lk-wrap{margin-top:7px;display:none}
+.lk{display:flex;align-items:flex-start;gap:9px;background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);padding:10px 12px}
+.lk.mine{border-color:var(--b3)}.lk.taken{border-color:rgba(248,113,113,.2)}
+.lk-ico{font-size:15px;flex-shrink:0;margin-top:1px}
+.lk-ttl{font-size:12px;font-weight:600;margin-bottom:2px}
+.lk-sub{font-size:11px;color:var(--t3);line-height:1.4}
+.lk-btn{display:inline-block;margin-top:6px;font-size:11px;font-weight:600;cursor:pointer;color:var(--t2);padding:4px 10px;border-radius:6px;border:1px solid var(--b2);transition:all .1s}
+.lk-btn:active{background:var(--s3)}.lk-btn.danger{color:var(--err);border-color:rgba(248,113,113,.25)}
+.skip-lnk{display:block;text-align:center;margin-top:10px;font-size:12px;color:var(--t3);cursor:pointer;padding:4px}
+.skip-lnk:active{color:var(--t2)}
+
+/* Segment */
+.seg-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sc{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r2);padding:13px 12px;cursor:pointer;transition:all .14s;position:relative}
+.sc:active{transform:scale(.97)}.sc.sel{background:var(--s2);border-color:var(--b4)}
+.sc.sel::after{content:'✓';position:absolute;top:10px;right:10px;width:16px;height:16px;border-radius:50%;background:var(--wh);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:800;color:var(--bl)}
+.sc-ico{font-size:19px;margin-bottom:7px}
+.sc-nm{font-size:12px;font-weight:700;margin-bottom:2px}
+.sc-sb{font-size:10px;color:var(--t3);line-height:1.4}
+.seg-hint{margin-top:8px;padding:9px 12px;background:var(--s1);border-radius:var(--r);font-size:12px;color:var(--t3);line-height:1.5;border:1px solid var(--b1);border-left:2px solid var(--b4);display:none}
+
+/* Pills */
+.pill-row{display:flex;gap:5px;flex-wrap:wrap}
+.pill{padding:7px 13px;border-radius:20px;border:1px solid var(--b2);background:var(--s1);font-family:var(--f);font-size:12px;font-weight:600;color:var(--t3);cursor:pointer;transition:all .14s;white-space:nowrap}
+.pill:active{transform:scale(.95)}.pill.sel{border-color:var(--b4);color:var(--t1);background:var(--s3)}
+
+/* AI section */
+.ai-ban{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:var(--r);background:var(--s1);border:1px solid var(--b2);margin-bottom:12px}
+.ai-dot{width:5px;height:5px;border-radius:50%;background:var(--wh);flex-shrink:0;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.ai-txt{font-size:11px;color:var(--t3);line-height:1.4}
+.field{width:100%;background:var(--s1);border:1px solid var(--b2);border-radius:var(--r);padding:12px 13px;font-family:var(--f);font-size:14px;color:var(--t1);outline:none;transition:border-color .14s}
+.field:focus{border-color:var(--b4)}.field::placeholder{color:var(--t3)}
+textarea.field{resize:none;min-height:58px;line-height:1.5}
+.f-lbl{display:block;font-size:11px;font-weight:600;color:var(--t3);margin-bottom:5px;margin-top:11px}
+
+/* Hints */
+.hint-wrap{margin-top:6px;display:none}
+.hint-lbl{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:5px}
+.hint-item{display:flex;align-items:flex-start;gap:8px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:9px 11px;margin-bottom:5px;cursor:pointer;transition:border-color .1s}
+.hint-item:active{border-color:var(--b3)}
+.h-ico{font-size:15px;flex-shrink:0;opacity:.7}
+.h-nm{font-size:12px;font-weight:600;color:var(--t1);margin-bottom:2px}
+.h-why{font-size:11px;color:var(--t3);line-height:1.4;margin-bottom:3px}
+.h-pr{font-size:11px;font-weight:600;color:var(--t2)}
+
+/* Nav btns */
+.nav-btns{display:flex;gap:7px;margin-top:18px}
+.nav-back{flex:0 0 auto;padding:13px 15px;border-radius:var(--r);border:1px solid var(--b2);background:var(--s1);font-family:var(--f);font-size:13px;font-weight:600;color:var(--t3);cursor:pointer;transition:all .14s}
+.nav-back:active{background:var(--s2)}.nav-back:disabled{opacity:.2;cursor:not-allowed}
+.nav-fwd{flex:1;padding:13px;border-radius:var(--r);border:none;background:var(--wh);font-family:var(--f);font-size:13px;font-weight:700;color:var(--bl);cursor:pointer;transition:opacity .14s;display:flex;align-items:center;justify-content:center;gap:7px}
+.nav-fwd:active{opacity:.8}.nav-fwd:disabled{opacity:.2;cursor:not-allowed}
+.spin{width:15px;height:15px;border:2px solid rgba(0,0,0,.15);border-top-color:#000;border-radius:50%;animation:rot .55s linear infinite;display:none}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+/* Result */
+.edit-bar{display:flex;align-items:center;justify-content:space-between;background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:9px 12px;margin-bottom:10px}
+.edit-info{font-size:12px;color:var(--t3);line-height:1.5}.edit-info strong{color:var(--t1)}
+.edit-btn{background:transparent;border:1px solid var(--b2);border-radius:6px;padding:5px 11px;font-family:var(--f);font-size:11px;font-weight:600;color:var(--t3);cursor:pointer;white-space:nowrap}
+.edit-btn:active{background:var(--s2)}
+.ctx-bar{font-size:11px;color:var(--t3);background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:7px 11px;margin-bottom:8px;line-height:1.5}
+.ctx-bar strong{color:var(--t2)}
+.stabs{display:flex;gap:4px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;margin-bottom:8px}
+.stabs::-webkit-scrollbar{display:none}
+.stab{flex-shrink:0;padding:6px 13px;border-radius:20px;border:1px solid var(--b2);background:var(--s1);font-family:var(--f);font-size:11px;font-weight:600;color:var(--t3);cursor:pointer;transition:all .14s;white-space:nowrap}
+.stab.on{border-color:var(--b4);color:var(--t1);background:var(--s3)}
+.obj-row{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px}
+.opill{padding:5px 11px;border-radius:7px;border:1px solid var(--b2);background:var(--s1);font-family:var(--f);font-size:11px;font-weight:600;color:var(--t3);cursor:pointer;transition:all .14s}
+.opill:active{transform:scale(.95)}.opill.on{border-color:var(--b4);color:var(--t1);background:var(--s3)}
+.scard{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r2);overflow:hidden;margin-bottom:7px}
+.scard-hd{padding:11px 13px;border-bottom:1px solid var(--b1);display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.scard-ttl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);margin-bottom:3px}
+.scard-goal{font-size:11px;font-weight:600;color:var(--t2)}
+.scard-body{padding:13px}
+.stext{font-size:13px;line-height:1.95;color:var(--t1);white-space:pre-wrap;word-break:break-word}
+.hl{font-weight:700;color:var(--t2)}.hln{font-weight:700;color:var(--wh);border-bottom:1px solid var(--b4)}
+.copybtn{flex-shrink:0;background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:6px 11px;font-family:var(--f);font-size:10px;font-weight:600;color:var(--t3);cursor:pointer;transition:all .14s;white-space:nowrap}
+.copybtn:active{transform:scale(.93)}.copybtn.done{color:var(--ok);border-color:rgba(74,222,128,.25)}
+.act-row{display:flex;gap:5px;margin-top:4px;margin-bottom:14px}
+.abtn{flex:1;padding:10px 5px;border-radius:var(--r);border:1px solid var(--b2);background:var(--s1);font-family:var(--f);font-size:9px;font-weight:600;color:var(--t3);cursor:pointer;transition:all .14s;display:flex;flex-direction:column;align-items:center;gap:3px}
+.abtn:active{transform:scale(.95);background:var(--s2)}.abtn-ico{font-size:15px}
+.up-block{margin-bottom:14px}
+.up-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);margin-bottom:7px}
+.up-item{display:flex;align-items:flex-start;gap:9px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:10px 11px;margin-bottom:5px}
+.up-ico{font-size:17px;flex-shrink:0;opacity:.7}
+.up-nm{font-size:12px;font-weight:700;margin-bottom:2px;color:var(--t1)}
+.up-pr{font-size:11px;font-weight:600;color:var(--t2);margin-bottom:2px}
+.up-why{font-size:11px;color:var(--t3);line-height:1.4}
+
+/* DOSSIER */
+.pg-hd{padding:16px 16px 2px;font-size:17px;font-weight:800;letter-spacing:-.4px}
+.pg-sub{padding:3px 16px 12px;font-size:12px;color:var(--t3)}
+.dos-search{padding:0 16px 10px}
+.dos-card{margin:0 16px 6px;background:var(--s1);border:1px solid var(--b2);border-radius:var(--r2);overflow:hidden}
+.dos-sec-hd{padding:9px 13px;background:var(--s2);border-bottom:1px solid var(--b1);font-size:10px;font-weight:700;color:var(--t2);letter-spacing:.4px;display:flex;align-items:center;gap:6px}
+.dos-rows{padding:9px 13px;display:flex;flex-direction:column;gap:7px}
+.dos-row{display:flex;align-items:flex-start;gap:6px}
+.dos-lbl{font-size:10px;color:var(--t3);min-width:140px;flex-shrink:0;line-height:1.4;padding-top:1px}
+.dos-val{font-size:11px;color:var(--t2);font-weight:500;line-height:1.4;word-break:break-word;flex:1}
+.dos-val.hi{color:var(--t1);font-weight:600}.dos-val.ok{color:var(--ok)}.dos-val.err{color:var(--err)}.dos-val.warn{color:var(--warn)}
+.dos-empty{text-align:center;padding:50px 20px;color:var(--t3)}
+.dos-empty-ico{font-size:38px;margin-bottom:10px;opacity:.3}
+.dos-exp{display:block;width:calc(100% - 32px);margin:12px 16px;padding:13px;border-radius:var(--r);border:1px solid var(--b2);background:var(--s1);font-family:var(--f);font-size:12px;font-weight:700;color:var(--t2);cursor:pointer;text-align:center;transition:all .14s}
+.dos-exp:active{background:var(--s2)}
+
+/* CYCLE */
+.cy-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);margin:0 16px 7px;overflow:hidden}
+.cy-hd{padding:11px 13px;border-bottom:1px solid var(--b1);font-size:12px;font-weight:700}
+.cy-steps{padding:10px 13px}
+.cy-step{display:flex;align-items:flex-start;gap:11px;padding:8px 0;position:relative}
+.cy-step:not(:last-child)::after{content:'';position:absolute;left:12px;top:26px;width:1px;height:calc(100% - 2px);background:var(--b2)}
+.cy-dot{width:24px;height:24px;border-radius:50%;flex-shrink:0;background:var(--s3);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--t3)}
+.cy-day{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px}
+.cy-act{font-size:12px;font-weight:600;margin-top:1px}.cy-note{font-size:11px;color:var(--t3);margin-top:1px;line-height:1.4}
+.rule-card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);margin:0 16px 7px;padding:13px;display:flex;flex-direction:column;gap:10px}
+.rule{display:flex;gap:9px;align-items:flex-start}.rico{font-size:16px;flex-shrink:0;opacity:.7}
+.rt{font-size:12px;font-weight:700;margin-bottom:2px}.rd{font-size:11px;color:var(--t3);line-height:1.4}
+
+/* TASKS */
+.task-add-wrap{padding:0 16px 10px}
+.task-compose{background:var(--s1);border:1px solid var(--b2);border-radius:var(--r2);padding:11px 13px}
+.task-r1{display:flex;gap:7px;margin-bottom:8px}
+.task-inp{flex:1;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);padding:9px 11px;font-family:var(--f);font-size:13px;color:var(--t1);outline:none;transition:border-color .14s}
+.task-inp:focus{border-color:var(--b4)}.task-inp::placeholder{color:var(--t3)}
+.task-add-btn{background:var(--wh);border:none;border-radius:var(--r);padding:9px 14px;font-family:var(--f);font-size:12px;font-weight:700;color:var(--bl);cursor:pointer;white-space:nowrap}
+.task-add-btn:active{opacity:.8}
+.task-meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.task-dt{background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);padding:6px 9px;font-family:var(--f);font-size:11px;color:var(--t2);outline:none;cursor:pointer}
+.task-dt::-webkit-calendar-picker-indicator{filter:invert(.4)}
+.task-co{flex:1;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);padding:6px 9px;font-family:var(--f);font-size:11px;color:var(--t2);outline:none;min-width:80px}
+.task-co::placeholder{color:var(--t3)}
+.pri-wrap{display:flex;gap:3px}
+.pri-btn{padding:6px 9px;border-radius:var(--r);border:1px solid var(--b2);font-family:var(--f);font-size:10px;font-weight:600;color:var(--t3);cursor:pointer;transition:all .14s}
+.pri-btn.hi.sel{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.3);color:var(--err)}
+.pri-btn.md.sel{background:rgba(251,191,36,.08);border-color:rgba(251,191,36,.3);color:var(--warn)}
+.pri-btn.lo.sel{background:rgba(74,222,128,.08);border-color:rgba(74,222,128,.3);color:var(--ok)}
+.task-filters{display:flex;gap:5px;padding:0 16px 9px;overflow-x:auto;scrollbar-width:none}
+.task-filters::-webkit-scrollbar{display:none}
+.tf{flex-shrink:0;padding:5px 11px;border-radius:20px;font-family:var(--f);font-size:11px;font-weight:600;color:var(--t3);cursor:pointer;border:1px solid var(--b2);transition:all .14s}
+.tf.on{border-color:var(--b4);color:var(--t1);background:var(--s3)}
+.task-list{padding:0 16px}
+.t-item{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:11px 13px;margin-bottom:6px;transition:opacity .2s}
+.t-item.done{opacity:.35}
+.t-top{display:flex;align-items:flex-start;gap:9px}
+.t-chk{width:18px;height:18px;border-radius:5px;border:1.5px solid var(--b3);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .14s;margin-top:1px}
+.t-item.done .t-chk{background:var(--ok);border-color:var(--ok);color:#000}
+.t-txt{font-size:13px;font-weight:600;color:var(--t1);line-height:1.4;flex:1}
+.t-item.done .t-txt{text-decoration:line-through;color:var(--t3)}
+.t-del{background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;padding:1px;flex-shrink:0}
+.t-del:active{color:var(--err)}
+.t-meta2{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-top:5px;margin-left:27px}
+.t-co{font-size:10px;color:var(--t3)}
+.t-date{font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px}
+.t-date.ov{background:rgba(248,113,113,.08);color:var(--err)}.t-date.td{background:rgba(251,191,36,.08);color:var(--warn)}
+.t-date.sn{background:rgba(255,255,255,.05);color:var(--t2)}.t-date.ok{background:rgba(74,222,128,.07);color:var(--ok)}
+.t-pri{font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px;text-transform:uppercase;letter-spacing:.4px}
+.t-pri.hi{background:rgba(248,113,113,.08);color:var(--err)}.t-pri.md{background:rgba(251,191,36,.08);color:var(--warn)}.t-pri.lo{background:rgba(74,222,128,.07);color:var(--ok)}
+.t-empty{text-align:center;padding:40px 20px;color:var(--t3)}
+
+/* HISTORY */
+.h-list{padding:0 16px}
+.h-item{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r2);padding:12px 13px;margin-bottom:6px;cursor:pointer;transition:border-color .12s}
+.h-item:active{border-color:var(--b3)}
+.h-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px}
+.h-nm{font-size:13px;font-weight:700}.h-tm{font-size:10px;color:var(--t3)}
+.h-tag{display:inline-block;font-size:10px;font-weight:600;color:var(--t3);padding:2px 7px;border-radius:4px;background:var(--s2);border:1px solid var(--b2);margin-bottom:5px}
+.h-prev{font-size:11px;color:var(--t3);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.h-del{background:none;border:1px solid var(--b1);border-radius:5px;padding:3px 8px;font-family:var(--f);font-size:10px;font-weight:600;color:var(--t3);cursor:pointer;flex-shrink:0;transition:all .1s}
+.h-del:active{color:var(--err);border-color:rgba(248,113,113,.25)}
+.empty{text-align:center;padding:60px 20px;color:var(--t3)}
+.empty-ico{font-size:38px;margin-bottom:10px;opacity:.3}
+.empty-ttl{font-size:14px;font-weight:600;margin-bottom:4px;color:var(--t2)}
+.empty-sb{font-size:12px}
+
+/* BNAV */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(10,10,10,.97);backdrop-filter:blur(20px);border-top:1px solid var(--b2);display:flex;padding:7px 4px 18px;z-index:200}
+.bni{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:5px 3px;border-radius:var(--r);transition:all .12s;position:relative}
+.bni:active{background:var(--s2)}.bni-ico{font-size:19px}
+.bni-lbl{font-size:8px;font-weight:600;color:var(--t3);letter-spacing:.3px}
+.bni.on .bni-lbl{color:var(--t1)}
+.bni-badge{position:absolute;top:3px;right:calc(50% - 16px);background:var(--err);color:#fff;font-size:8px;font-weight:700;min-width:13px;height:13px;border-radius:7px;display:none;align-items:center;justify-content:center;padding:0 3px}
+
+/* TOAST */
+.toast{position:fixed;bottom:84px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--s4);border:1px solid var(--b3);color:var(--t1);font-family:var(--f);font-weight:600;font-size:12px;padding:9px 16px;border-radius:20px;z-index:999;opacity:0;transition:all .22s;pointer-events:none;white-space:nowrap;box-shadow:0 8px 30px rgba(0,0,0,.8)}
+.toast.ok{background:rgba(74,222,128,.1);border-color:rgba(74,222,128,.2);color:var(--ok)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.g8{height:8px}.g16{height:16px}
+</style>
+</head>
+<body><div class="app">
+<!-- HEADER -->
+<div class="hdr">
+  <div class="logo">
+    <div class="lmark">X</div>
+    <div><div class="ltext">xPower</div><div class="lsub">Sales Intelligence</div></div>
+  </div>
+  <div class="hdr-r">
+    <div class="ipill" id="ind-pill" onclick="resetInd()">— отрасль</div>
+    <div class="mtgl">
+      <button class="mtb on" id="mbAI" onclick="setMode('ai')">AI</button>
+      <button class="mtb" id="mbMan" onclick="setMode('manual')">Готовые</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: BUILDER -->
+<div class="page active" id="pg-builder"><div class="wiz">
+  <div class="prog-wrap" id="prog-wrap">
+    <div class="prog-top"><div class="prog-lbl" id="prog-lbl">—</div><div class="prog-co" id="prog-co"></div></div>
+    <div class="prog-tr"><div class="prog-fl" id="prog-fl" style="width:0%"></div></div>
+  </div>
+
+  <!-- STEP 0: INDUSTRY -->
+  <div class="sw active" id="step-0">
+    <div class="s0-hero">
+      <div class="s0-from">от xPower</div>
+      <div class="s0-title">Привет 👋<br>Выберите <em>отрасль</em></div>
+      <div class="s0-sub">Система подберёт скрипты, подсказки и цикл касаний под вашу сферу продаж</div>
+    </div>
+    <div class="ind-grid">
+      <div class="ic" data-ind="furniture" onclick="selInd(this)"><div class="ic-ico">🪑</div><div class="ic-nm">Офисная мебель</div><div class="ic-sb">Рабочие места, переговорные, хранение</div></div>
+      <div class="ic" data-ind="construction" onclick="selInd(this)"><div class="ic-ico">🏗️</div><div class="ic-nm">Строительство</div><div class="ic-sb">Ремонт, отделка, стройматериалы</div></div>
+      <div class="ic" data-ind="it" onclick="selInd(this)"><div class="ic-ico">💻</div><div class="ic-nm">IT / Софт</div><div class="ic-sb">ПО, лицензии, сервисы, интеграции</div></div>
+      <div class="ic" data-ind="logistics" onclick="selInd(this)"><div class="ic-ico">🚚</div><div class="ic-nm">Логистика</div><div class="ic-sb">Доставка, склад, ВЭД, перевозки</div></div>
+    </div>
+    <button class="btn-full" id="btn-ind" onclick="confirmInd()" disabled>Начать работу →</button>
+  </div>
+
+  <!-- STEP 1: INN -->
+  <div class="sw" id="step-1">
+    <span class="slbl">Шаг 1 — Компания</span>
+    <div class="inn-wrap">
+      <input class="inn-inp" id="inn-inp" type="tel" inputmode="numeric" placeholder="ИНН компании (10 или 12 цифр)" maxlength="12" onkeydown="if(event.key==='Enter')doINN()"/>
+      <button class="inn-go" onclick="doINN()">🔍</button>
+    </div>
+    <div class="inn-ldr" id="inn-ldr"><span class="da">Ищем компанию</span></div>
+    <div class="co-card" id="co-card"></div>
+    <div class="lk-wrap" id="lk-wrap"></div>
+    <div class="skip-lnk" onclick="skipINN()">Пропустить — продолжить без поиска →</div>
+    <div class="nav-btns">
+      <button class="nav-back" onclick="goStep(0)">← Назад</button>
+      <button class="nav-fwd" id="btn-s1" onclick="goStep(2)" disabled>Далее →</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: SEGMENT -->
+  <div class="sw" id="step-2">
+    <span class="slbl">Шаг 2 — Сегмент клиента</span>
+    <div class="seg-grid">
+      <div class="sc" data-s="small" onclick="selSeg(this)"><div class="sc-ico">🏪</div><div class="sc-nm">Малый бизнес</div><div class="sc-sb">ИП / ООО до 15 чел.</div></div>
+      <div class="sc" data-s="medium" onclick="selSeg(this)"><div class="sc-ico">🏢</div><div class="sc-nm">Средний бизнес</div><div class="sc-sb">15–100 сотрудников</div></div>
+      <div class="sc" data-s="corp" onclick="selSeg(this)"><div class="sc-ico">🏦</div><div class="sc-nm">Корпоратив</div><div class="sc-sb">100+ сотрудников</div></div>
+      <div class="sc" data-s="gov" onclick="selSeg(this)"><div class="sc-ico">🏛️</div><div class="sc-nm">Госструктура</div><div class="sc-sb">Бюджетные организации</div></div>
+    </div>
+    <div class="seg-hint" id="seg-hint"></div>
+    <div class="nav-btns">
+      <button class="nav-back" onclick="goStep(1)">← Назад</button>
+      <button class="nav-fwd" id="btn-s2" onclick="goStep(3)" disabled>Далее →</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: CHANNEL + CONTEXT -->
+  <div class="sw" id="step-3">
+    <span class="slbl">Шаг 3 — Канал и контекст</span>
+    <div class="pill-row" id="ch-row">
+      <div class="pill sel" data-ch="call" onclick="selCh(this)">📞 Звонок</div>
+      <div class="pill" data-ch="wa" onclick="selCh(this)">💬 WhatsApp</div>
+      <div class="pill" data-ch="email" onclick="selCh(this)">📧 Email</div>
+    </div>
+    <div id="ai-sec" style="margin-top:14px">
+      <div class="ai-ban"><div class="ai-dot"></div><div class="ai-txt">AI составит персональный скрипт с конкретными предложениями под вашу отрасль и клиента</div></div>
+      <label class="f-lbl">Что заказывал клиент</label>
+      <input class="field" id="pur-what" placeholder="Например: монтаж перегородок, 120 м²" oninput="onPurInput(this.value)"/>
+      <label class="f-lbl">Сумма заказа</label>
+      <input class="field" id="pur-sum" type="text" inputmode="numeric" placeholder="Например: 350 000 ₽" oninput="fmtSum(this)"/>
+      <div class="hint-wrap" id="hint-wrap"><div class="hint-lbl">Логично предложить</div><div id="hint-chips"></div></div>
+      <label class="f-lbl">Контекст <span style="color:var(--t3);font-weight:400">(необязательно)</span></label>
+      <textarea class="field" id="ai-ctx" placeholder="Особенности клиента, детали прошлого заказа, возражения…"></textarea>
+    </div>
+    <div id="man-sec" style="margin-top:14px;display:none">
+      <div style="padding:9px 12px;background:var(--s1);border-radius:var(--r);border:1px solid var(--b1);font-size:12px;color:var(--t3)">Будет использован стандартный скрипт для выбранного сегмента и канала.</div>
+    </div>
+    <div class="nav-btns">
+      <button class="nav-back" onclick="goStep(2)">← Назад</button>
+      <button class="nav-fwd" id="btn-gen" onclick="generate()">
+        <span id="gen-txt">Сгенерировать скрипт</span><div class="spin" id="gen-spin"></div>
+      </button>
+    </div>
+  </div>
+
+  <!-- STEP 4: RESULT -->
+  <div class="sw" id="step-4">
+    <div class="edit-bar"><div class="edit-info" id="edit-info">—</div><button class="edit-btn" onclick="goStep(1)">Изменить</button></div>
+    <div id="ctx-bar-wrap" style="display:none"><div class="ctx-bar" id="ctx-bar"></div></div>
+    <div class="stabs" id="out-tabs"></div>
+    <div class="obj-row" id="obj-row" style="display:none">
+      <div class="opill on" data-obj="main" onclick="selObj(this)">Вводный</div>
+      <div class="opill" data-obj="obj1" onclick="selObj(this)">Возражение 1</div>
+      <div class="opill" data-obj="obj2" onclick="selObj(this)">Возражение 2</div>
+    </div>
+    <div class="scard">
+      <div class="scard-hd"><div><div class="scard-ttl" id="card-ttl"></div><div class="scard-goal" id="card-goal"></div></div><button class="copybtn" onclick="copyEl('main-st',this)">Копировать</button></div>
+      <div class="scard-body"><div class="stext" id="main-st"></div></div>
+    </div>
+    <div class="scard" id="fu-card" style="display:none">
+      <div class="scard-hd"><div><div class="scard-ttl">Follow-up · День 3</div><div class="scard-goal">Напоминание без давления</div></div><button class="copybtn" onclick="copyEl('fu-st',this)">Копировать</button></div>
+      <div class="scard-body"><div class="stext" id="fu-st"></div></div>
+    </div>
+    <div class="up-block" id="up-block" style="display:none">
+      <div class="up-lbl">Предложить докупить / расширить</div><div id="up-list"></div>
+    </div>
+    <div class="act-row">
+      <button class="abtn" onclick="copyAll()"><div class="abtn-ico">📤</div>Всё</button>
+      <button class="abtn" onclick="saveH()"><div class="abtn-ico">✅</div>История</button>
+      <button class="abtn" onclick="addTaskAuto()"><div class="abtn-ico">🔔</div>Напомнить</button>
+      <button class="abtn" onclick="expTxt()"><div class="abtn-ico">💾</div>Файл</button>
+    </div>
+  </div>
+</div></div>
+
+<!-- PAGE: DOSSIER -->
+<div class="page" id="pg-dossier">
+  <div class="pg-hd">Досье</div>
+  <div class="pg-sub">Полная карточка компании — 60+ полей из DaData и ФНС</div>
+  <div class="dos-search">
+    <div class="inn-wrap">
+      <input class="inn-inp" id="dos-inn" type="tel" inputmode="numeric" placeholder="ИНН для досье (10 или 12 цифр)" maxlength="12" onkeydown="if(event.key==='Enter')loadDos()"/>
+      <button class="inn-go" onclick="loadDos()">🔍</button>
+    </div>
+    <div class="inn-ldr" id="dos-ldr" style="display:none"><span class="da">Загружаем данные</span></div>
+  </div>
+  <div id="dos-content">
+    <div class="dos-empty"><div class="dos-empty-ico">🏢</div>
+    <div style="font-size:14px;font-weight:600;color:var(--t2);margin-bottom:4px">Введите ИНН</div>
+    <div style="font-size:12px">Загрузим полную карточку компании из открытых источников</div></div>
+  </div>
+  <div class="g16"></div>
+</div>
+
+<!-- PAGE: CYCLE -->
+<div class="page" id="pg-cycle">
+  <div class="pg-hd">Цикл касаний</div>
+  <div class="pg-sub" id="cy-sub">Выберите отрасль в Сборщике</div>
+  <div id="cy-content"></div><div class="g16"></div>
+</div>
+
+<!-- PAGE: TASKS -->
+<div class="page" id="pg-tasks">
+  <div class="pg-hd">Задачи</div>
+  <div class="pg-sub">Следующие шаги и напоминалки</div>
+  <div class="task-add-wrap">
+    <div class="task-compose">
+      <div class="task-r1">
+        <input class="task-inp" id="t-inp" placeholder="Новая задача…" onkeydown="if(event.key==='Enter')addTask()"/>
+        <button class="task-add-btn" onclick="addTask()">+ Добавить</button>
+      </div>
+      <div class="task-meta">
+        <input class="task-dt" id="t-date" type="date"/>
+        <input class="task-co" id="t-co" placeholder="Компания"/>
+        <div class="pri-wrap">
+          <div class="pri-btn hi sel" data-pri="hi" onclick="selPri(this)">🔴</div>
+          <div class="pri-btn md" data-pri="md" onclick="selPri(this)">🟡</div>
+          <div class="pri-btn lo" data-pri="lo" onclick="selPri(this)">🟢</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="task-filters">
+    <div class="tf on" data-tf="all" onclick="setTF(this)">Все</div>
+    <div class="tf" data-tf="today" onclick="setTF(this)">Сегодня</div>
+    <div class="tf" data-tf="overdue" onclick="setTF(this)">Просрочено</div>
+    <div class="tf" data-tf="done" onclick="setTF(this)">Выполнено</div>
+  </div>
+  <div class="task-list" id="task-list"></div><div class="g16"></div>
+</div>
+
+<!-- PAGE: HISTORY -->
+<div class="page" id="pg-history">
+  <div class="pg-hd">История</div>
+  <div class="pg-sub" style="display:flex;justify-content:space-between;align-items:center">
+    <span>Сохранённые скрипты</span>
+    <span style="font-size:11px;color:var(--t3);cursor:pointer" onclick="clearH()">Очистить</span>
+  </div>
+  <div class="h-list" id="h-list"></div><div class="g16"></div>
+</div>
+
+</div><!-- /app -->
+
+<div class="bnav">
+  <div class="bni on" id="bni-builder" onclick="showPg('builder')"><div class="bni-ico">⚡</div><div class="bni-lbl">Скрипт</div></div>
+  <div class="bni" id="bni-dossier" onclick="showPg('dossier')"><div class="bni-ico">🏢</div><div class="bni-lbl">Досье</div></div>
+  <div class="bni" id="bni-cycle" onclick="showPg('cycle')"><div class="bni-ico">📅</div><div class="bni-lbl">Цикл</div></div>
+  <div class="bni" id="bni-tasks" onclick="showPg('tasks')"><div class="bni-ico">✅</div><div class="bni-lbl">Задачи</div><div class="bni-badge" id="t-badge"></div></div>
+  <div class="bni" id="bni-history" onclick="showPg('history')"><div class="bni-ico">🕑</div><div class="bni-lbl">История</div></div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+// ═══════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════
+const DDT  = 'ee417a326c0dccb50534998f3ef0859175b277f2';
+const DDS  = '75b02eb08e4feecfa469ed2da59ad725ea826cd1';
+const LKP  = 'xp_lock:';
+const AIM  = 'claude-sonnet-4-20250514';
+
+// ═══════════════════════════════════
+// STATE
+// ═══════════════════════════════════
+let mode='ai', curStep=0, curInd=localStorage.getItem('xp_ind')||'', curObj='main', tPri='hi', tFilter='all';
+let S={inn:'',company:null,fio:null,seg:null,ch:'call',purchase:'',purchaseSum:null,ctx:'',scripts:null,goal:'',upsell:[]};
+let HIST  = spar('xp_hist',[]);
+let TASKS = spar('xp_tasks',[]);
+function spar(k,d){try{return JSON.parse(localStorage.getItem(k)||'null')||d}catch{return d}}
+
+// ═══════════════════════════════════
+// DATA: INDUSTRY
+// ═══════════════════════════════════
+const IND={
+  furniture:{label:'Офисная мебель',
+    hints:[
+      {match:['стол','рабочее место','кресло','шкаф','тумба','мебель','поставка'],items:[
+        {ico:'🪑',nm:'Кресло эргономичное',why:'Рабочее место без кресла — незаконченное',price:'от 19 500 ₽'},
+        {ico:'🗄️',nm:'Тумба мобильная',why:'Хранение у рабочего места',price:'от 14 200 ₽'},
+        {ico:'🔇',nm:'Акустический экран',why:'Снижает шум в open space на 30–40%',price:'от 8 000 ₽'}]},
+      {match:['переговорный','конференц'],items:[
+        {ico:'🪑',nm:'Кресла для посетителей',why:'На каждое место — удобное кресло',price:'от 15 990 ₽/шт'},
+        {ico:'🛋️',nm:'Диван в зону ожидания',why:'Первое впечатление об офисе',price:'от 42 000 ₽'}]}
+    ],
+    cycle:[
+      {day:'День 1',act:'📞 Вводный звонок',note:'Напомнить о себе, узнать планы по офису'},
+      {day:'День 3',act:'💬 WhatsApp',note:'Отправить конкретную подборку'},
+      {day:'День 5',act:'📧 Email с каталогом',note:'КП с ценами и сроками'},
+      {day:'День 7',act:'💬 WA follow-up',note:'Уточнить — дошло ли предложение'},
+      {day:'День 10',act:'📞 Повторный звонок',note:'Снять возражения, предложить встречу'},
+      {day:'День 14',act:'📧 Финальный email',note:'Последняя попытка без давления'}]},
+  construction:{label:'Строительство / Ремонт',
+    hints:[
+      {match:['ремонт','отделка','монтаж','строй','перегородк','пол','потолок','стены','плитк'],items:[
+        {ico:'🧱',nm:'Доп. материалы',why:'Расход обычно выше расчётного на 5–10%',price:'под смету'},
+        {ico:'🔧',nm:'Смежные виды работ',why:'Электрика, сантехника — комплексный подряд',price:'договорная'},
+        {ico:'📐',nm:'Дизайн-проект',why:'Снимает вопросы до начала работ',price:'от 50 000 ₽'}]},
+      {match:['фасад','кровля','фундамент'],items:[
+        {ico:'🏗️',nm:'Инженерные системы',why:'Вентиляция, отопление — в одном проекте',price:'по смете'},
+        {ico:'📋',nm:'Авторский надзор',why:'Контроль качества на каждом этапе',price:'от 15 000 ₽/мес'}]}
+    ],
+    cycle:[
+      {day:'День 1',act:'📞 Звонок',note:'Узнать текущий объём объектов'},
+      {day:'День 2',act:'📧 КП с расчётами',note:'Предварительная смета'},
+      {day:'День 4',act:'💬 WA — уточнение',note:'Нужен ли выезд на замер'},
+      {day:'День 7',act:'📞 Обсуждение сметы',note:'Ответить на вопросы'},
+      {day:'День 10',act:'📧 Финальное предложение',note:'С договором и гарантиями'},
+      {day:'День 14',act:'📞 Подписание',note:'Договориться о старте'}]},
+  it:{label:'IT / Программное обеспечение',
+    hints:[
+      {match:['по','лицензи','сервис','интеграц','crm','erp','систем','подписк','1с'],items:[
+        {ico:'🔧',nm:'Техподдержка 24/7',why:'Снижает риски простоя',price:'от 15 000 ₽/мес'},
+        {ico:'🎓',nm:'Обучение команды',why:'Повышает adoption в 2–3 раза',price:'от 30 000 ₽'},
+        {ico:'🔗',nm:'Дополнительный модуль',why:'Расширяет функционал без смены платформы',price:'индивидуально'}]},
+      {match:['разработк','сайт','приложен'],items:[
+        {ico:'🛡️',nm:'Техническое обслуживание',why:'После сдачи нужна поддержка',price:'от 20 000 ₽/мес'},
+        {ico:'📊',nm:'Аналитика и метрики',why:'Без данных нет понимания развития',price:'от 25 000 ₽'}]}
+    ],
+    cycle:[
+      {day:'День 1',act:'📞 Discovery-звонок',note:'Выяснить боли и текущий стек'},
+      {day:'День 3',act:'📧 Презентация',note:'Кастомизированная под задачу'},
+      {day:'День 5',act:'💬 WA — демо',note:'Предложить пилот или демо-доступ'},
+      {day:'День 8',act:'📞 Обсуждение пилота',note:'Условия тестирования'},
+      {day:'День 12',act:'📧 КП с ROI',note:'Коммерческое предложение'},
+      {day:'День 16',act:'📞 Закрытие',note:'Финальные вопросы и договор'}]},
+  logistics:{label:'Логистика / Доставка',
+    hints:[
+      {match:['доставк','перевозк','склад','груз','фрахт','отправк'],items:[
+        {ico:'📦',nm:'Страхование груза',why:'Снижает риски, повышает доверие',price:'0.1–0.3% от стоимости'},
+        {ico:'🏭',nm:'Складское хранение',why:'Комплексное решение = бо́льший чек',price:'от 80 руб/м²/день'},
+        {ico:'📊',nm:'Трекинг и аналитика',why:'Прозрачность цепочки поставок',price:'от 5 000 ₽/мес'}]},
+      {match:['таможн','вэд','импорт','экспорт'],items:[
+        {ico:'📋',nm:'Таможенное оформление',why:'В одних руках — быстрее и дешевле',price:'от 15 000 ₽'},
+        {ico:'🔒',nm:'Страхование внешнеторговых рисков',why:'Защита при международных перевозках',price:'индивидуально'}]}
+    ],
+    cycle:[
+      {day:'День 1',act:'📞 Первый контакт',note:'Узнать маршруты и частоту отправок'},
+      {day:'День 2',act:'📧 КП с тарифами',note:'Персональный расчёт'},
+      {day:'День 4',act:'💬 WA — уточнение',note:'Особые требования к грузу'},
+      {day:'День 7',act:'📞 Согласование',note:'Обсудить условия и сроки'},
+      {day:'День 10',act:'📧 Договор',note:'Направить на подписание'},
+      {day:'День 14',act:'📞 Первая отправка',note:'Подтвердить старт'}]}
+};
+
+const SEG={
+  small:{label:'Малый бизнес',hint:'ИП или ООО до 15 чел. Решение принимает владелец. Ценит скорость и простоту оформления.'},
+  medium:{label:'Средний бизнес',hint:'15–100 сотрудников. ЛПР — офис-менеджер или завхоз. Важны сроки, документы, согласования.'},
+  corp:{label:'Корпоратив',hint:'100+ сотрудников. Длинный цикл согласований. Ценят надёжность и готовность к тендеру.'},
+  gov:{label:'Госструктура',hint:'Бюджетная организация. Закупки по 44-ФЗ / 223-ФЗ. Нужны КП, сертификаты, пакет документов.'}
+};
+// ═══════════════════════════════════
+// SCRIPTS LIBRARY — 4 отрасли × 4 сегмента × 3 канала
+// ═══════════════════════════════════
+const LIB={
+  furniture:{
+    small:{
+      call:{goal:'Узнать планы по офису, предложить подборку',
+        main:`— Добрый день, [Имя]!\n\nЭто [Ваше имя], компания [Ваша компания].\nНесколько месяцев назад делали поставку мебели для вашего офиса.\n\nЗвоню коротко — не планируете обновлять или расширять офис?`,
+        obj1:`«Пока ничего не нужно»\n\n— Понимаю. Тогда отправлю пару решений — пусть будут под рукой. Многие клиенты докупают когда команда растёт.\n\nПришлю в WhatsApp — окей?`,
+        obj2:`«У нас всё уже есть»\n\n— Отлично! Держу в курсе новинок — появились новые кресла и переговорные. Могу отправить пару вариантов?`},
+      wa:{goal:'Получить разрешение на подборку',
+        main:`Здравствуйте, [Имя]!\n\nЭто [Ваше имя], [Ваша компания].\nНесколько месяцев назад делали вам поставку мебели.\n\nПишу — появились новые решения для небольших офисов.\n\nИнтересно посмотреть?`,
+        fu:`Добрый день, [Имя]!\n\nПисал пару дней назад. Если сейчас не актуально — понимаю.\n\nКогда будете обновлять рабочие места — пишите, быстро подберу варианты.`},
+      email:{goal:'Получить ответ или переход на сайт',
+        main:`Тема: Новые решения для вашего офиса\n\nЗдравствуйте, [Имя]!\n\nНесколько месяцев назад вы заказывали мебель в [Ваша компания].\n\nПоявились новые модели рабочих столов и кресел для небольших команд. Многие клиенты докупают рабочие места по мере роста.\n\nЕсли интересно — могу прислать подборку.\n\n[Ваше имя] | [Ваша компания]`,
+        fu:`Тема: Отправить подборку?\n\nДобрый день, [Имя]!\n\nХотел уточнить — актуально ли обновление рабочих мест. Если да — пришлю несколько вариантов.\n\n[Ваше имя]`}},
+    medium:{
+      call:{goal:'Узнать планы по расширению',
+        main:`— Добрый день, [Имя].\n\nЭто [Ваше имя], [Ваша компания].\nНесколько месяцев назад работали по мебели для вашего офиса.\n\nЗвоню — не планируется расширение команды или обновление рабочих зон?`,
+        obj1:`«Сейчас не планируем»\n\n— Понял. Отправлю новые модели — пусть будут под рукой. Часто докупают когда появляются новые сотрудники.`,
+        obj2:`«Пока ничего не меняем»\n\n— Не тороплю. Пришлю несколько решений — иногда обновляют часть офиса без полной замены.`},
+      wa:{goal:'Отправить презентацию',
+        main:`Здравствуйте, [Имя]!\n\nЭто [Ваше имя], [Ваша компания]. Работали по мебели для вашего офиса.\n\nПишу коротко — появились новые решения для рабочих зон.\n\nЕсли актуально — пришлю несколько вариантов.`,
+        fu:`Добрый день, [Имя]!\n\nНапоминаю о сообщении. Если планируется расширение — буду рад подобрать варианты.`},
+      email:{goal:'Получить ответ или звонок',
+        main:`Тема: Новые решения для рабочих зон\n\nЗдравствуйте, [Имя]!\n\nНесколько месяцев назад работали по мебели для вашего офиса.\n\nПоявились новые решения для рабочих зон и переговорных. Часто компании возвращаются когда нужно организовать дополнительные рабочие места.\n\nЕсли интересно — могу отправить подборку.\n\n[Ваше имя] | [Ваша компания]`,
+        fu:`Тема: Актуально ли расширение офиса?\n\nДобрый день, [Имя]!\n\nХотел уточнить — планируется ли расширение команды. Если да — готов оперативно подготовить КП.\n\n[Ваше имя]`}},
+    corp:{
+      call:{goal:'Выйти на ЛПР, узнать план закупок',
+        main:`— Добрый день, [Имя].\n\nЭто [Ваше имя], [Ваша компания].\nНесколько месяцев назад работали по поставке мебели для вашего офиса.\n\nПланируются ли в ближайшие месяцы новые проекты или обновление офисных зон?`,
+        obj1:`«Сейчас всё закрыто»\n\n— Понял, спасибо, [Имя]. Тогда направлю обновлённый каталог — для следующего планирования. На какой адрес удобно отправить?`,
+        obj2:`«Закупаем только через тендер»\n\n— Мы готовы — работаем по 44-ФЗ и 223-ФЗ, все документы в наличии. Если пришлёте ТЗ заранее — поможем с формулировками.`},
+      wa:{goal:'Перевести в звонок или запросить email',
+        main:`Здравствуйте, [Имя]!\n\nЭто [Ваше имя], [Ваша компания]. Ранее работали по поставке офисной мебели.\n\nПишу — появились новые решения для рабочих пространств. Если планируются проекты — могу направить обновлённую презентацию.`,
+        fu:`Добрый день, [Имя]!\n\nПродублирую — если актуально обновление офиса, буду рад подготовить предложение.`},
+      email:{goal:'Получить ответ, назначить встречу',
+        main:`Тема: Новые решения для офисных пространств\n\nЗдравствуйте, [Имя]!\n\n[Ваша компания] ранее поставляла мебель для вашего офиса.\n\nОбновление каталога и условий для корпоративных клиентов:\n— Новые решения для рабочих пространств и переговорных\n— Работа по договору с полным пакетом документов\n— Участие в тендерах (44-ФЗ, 223-ФЗ)\n— Индивидуальные условия при объёме от 30 единиц\n\nГотов подготовить КП.\n\n[Ваше имя] | [Ваша компания]`,
+        fu:`Тема: Хотел уточнить\n\nЗдравствуйте, [Имя]!\n\nПродублирую письмо. Если сейчас не актуально — скажите когда лучше вернуться.\n\n[Ваше имя]`}},
+    gov:{
+      call:{goal:'Выяснить план закупок',
+        main:`— Добрый день, [Имя].\n\nЭто [Ваше имя], [Ваша компания]. Поставляли мебель для вашей организации.\n\nПланируются ли в этом году закупки мебели или обновление рабочих мест?`,
+        obj1:`«Закупаем только через торги»\n\n— Понимаем, [Имя], и готовы участвовать. Если пришлёте ТЗ заранее — помогу с формулировками и подготовлю полный пакет.`,
+        obj2:`«Нет бюджета сейчас»\n\n— Понимаю. Пришлю актуальный прайс — удобно для планирования следующего бюджета.`},
+      wa:{goal:'Узнать план закупок',
+        main:`Здравствуйте, [Имя].\n\nЭто [Ваше имя], [Ваша компания]. Ранее поставляли мебель для вашей организации.\n\nПри необходимости готовы направить каталог и КП.`,
+        fu:`Добрый день, [Имя].\n\nПродублирую — если планируются закупки, готов направить КП с полным пакетом документов. Работаем по 44-ФЗ и 223-ФЗ.`},
+      email:{goal:'Попасть в план закупок',
+        main:`Тема: Поставка офисной мебели — каталог и КП\n\nЗдравствуйте, [Имя]!\n\n[Ваша компания] ранее поставляла мебель для вашей организации.\n\nИнформируем об обновлении ассортимента. Готовы предоставить:\n— КП с техническими характеристиками\n— Сертификаты соответствия\n— Работа по 44-ФЗ / 223-ФЗ\n— Помощь в подготовке ТЗ\n\n[Ваше имя] | [Ваша компания]`,
+        fu:`Тема: Документы для плана закупок\n\nДобрый день, [Имя]!\n\nПродублирую. Готов оперативно предоставить все необходимые документы.\n\n[Ваше имя]`}}
+  },
+  construction:{
+    small:{
+      call:{goal:'Узнать текущий объект, предложить выезд',
+        main:`— Добрый день, [Имя]!\n\nЭто [Ваше имя], [Ваша компания]. Работали по объекту несколько месяцев назад.\n\nЗвоню — есть новые объекты на горизонте?`,
+        obj1:`«Пока нет»\n\n— Понятно. Держите нас в уме — как появится объект, выезжаем на замер в день обращения и делаем смету за 24 часа.`,
+        obj2:`«Уже работаем с другими»\n\n— Хорошо, [Имя]. Если нужно сравнить предложение — всегда готов пересчитать.`},
+      wa:{goal:'Узнать о новых объектах',
+        main:`Здравствуйте, [Имя]!\n\nЭто [Ваше имя], [Ваша компания]. Работали вместе по объекту.\n\nЕсть новые задачи по ремонту или отделке? Готов сделать расчёт быстро.`,
+        fu:`Добрый день, [Имя]!\n\nПисал пару дней назад. Когда появятся объекты — пишите, смета за 24 часа.`},
+      email:{goal:'Получить запрос на смету',
+        main:`Тема: Готовы к вашим объектам\n\nЗдравствуйте, [Имя]!\n\nРаботали вместе по ремонту / отделке.\n\nЕсли есть новые объекты — готовы оперативно выехать на замер и подготовить смету.\n\n[Ваше имя] | [Ваша компания]`,
+        fu:`Тема: Смета за 24 часа\n\nДобрый день, [Имя]!\n\nПродублирую — готовы к новым задачам.\n\n[Ваше имя]`}},
+    medium:{
+      call:{goal:'Предложить сезонный объём',
+        main:`— Добрый день, [Имя].\n\nЭто [Ваше имя], [Ваша компания]. Работали по вашим объектам.\n\nЕсть задачи на этот сезон или что-то в плане на следующий квартал?`,
+        obj1:`«Смотрим предложения»\n\n— Предлагаю сделать предварительный расчёт — так удобнее сравнивать. Пришлите ТЗ — смета за сутки.`,
+        obj2:`«Бюджеты не согласованы»\n\n— Понимаю. Могу подготовить предварительный расчёт прямо сейчас — удобно для согласования.`},
+      wa:{goal:'Узнать о новых объектах',
+        main:`Здравствуйте, [Имя]!\n\nЭто [Ваше имя], [Ваша компания]. Работали по вашим объектам.\n\nЕсть что-то на этот сезон? Готовы сделать расчёт быстро.`,
+        fu:`Добрый день, [Имя]!\n\nПродублирую — если появятся объекты, смета за сутки.`},
+      email:{goal:'Получить запрос на КП',
+        main:`Тема: Готовы к новому сезону\n\nЗдравствуйте, [Имя]!\n\nРаботали по вашим объектам. Готовы к новому сезону.\n\nЕсли есть задачи — подготовлю смету за сутки после получения ТЗ.\n\n[Ваше имя] | [Ваша компания]`,
+        fu:`Тема: Смета за сутки\n\nДобрый день, [Имя]!\n\nПродублирую — готовы к новым задачам.\n\n[Ваше имя]`}},
+    corp:{
+      call:{goal:'Войти в пул подрядчиков',
+        main:`— Добрый день, [Имя].\n\nЭто [Ваше имя], [Ваша компания]. Выполняли работы по вашим объектам.\n\nРассматриваете ли вы обновление пула подрядчиков или есть новые объекты на этот год?`,
+        obj1:`«Работаем с текущими»\n\n— Понимаю. Могу направить актуальные расценки — полезно для сравнения при следующем тендере.`,
+        obj2:`«Закупаем через тендер»\n\n— Готовы участвовать — допуски СРО в наличии, опыт работы по 223-ФЗ.`},
+      wa:{goal:'Попасть в список подрядчиков',
+        main:`Здравствуйте, [Имя]!\n\nЭто [Ваше имя], [Ваша компания]. Работали по вашим объектам.\n\nЕсли рассматриваете подрядчиков на новый сезон — готов направить расценки и портфолио.`,
+        fu:`Добрый день, [Имя]!\n\nПродублирую — готовы к тендерам, все документы и допуски в наличии.`},
+      email:{goal:'Попасть в тендер',
+        main:`Тема: Строительные работы — предложение\n\nЗдравствуйте, [Имя]!\n\nВыполняли работы по вашим объектам.\n\nНаши преимущества:\n— Допуски СРО, работа по 44-ФЗ / 223-ФЗ\n— Гарантия на все виды работ\n— Собственные бригады, без субподряда\n\nГотов направить портфолио и расценки.\n\n[Ваше имя] | [Ваша компания]`,
+        fu:`Тема: Документы для тендера готовы\n\nДобрый день, [Имя]!\n\nПродублирую — готовы, документы предоставим оперативно.\n\n[Ваше имя]`}},
+    gov:{
+      call:{goal:'Попасть в план закупок',
+        main:`— Добрый день, [Имя].\n\nЭто [Ваше имя], [Ваша компания]. Выполняли работы для вашей организации.\n\nПланируются ли в этом году строительные или ремонтные работы?`,
+        obj1:`«Закупаем через торги»\n\n— Готовы участвовать, работаем по 44-ФЗ, все допуски СРО в наличии. Если пришлёте ТЗ — поможем с формулировками.`,
+        obj2:`«Нет финансирования»\n\n— Понимаю. Пришлю актуальный прайс — удобно для планирования бюджета.`},
+      wa:{goal:'Узнать план работ',
+        main:`Здравствуйте, [Имя].\n\nЭто [Ваше имя], [Ваша компания]. Выполняли работы для вашей организации.\n\nПланируются ли ремонтные или строительные работы в этом году?`,
+        fu:`Добрый день, [Имя].\n\nПродублирую — готовы к участию в тендере, допуски и документация в наличии.`},
+      email:{goal:'Попасть в план закупок',
+        main:`Тема: Строительные / ремонтные работы — КП\n\nЗдравствуйте, [Имя]!\n\nВыполняли работы для вашей организации.\n\nГотовы предоставить:\n— КП с расчётами\n— Лицензии и допуски СРО\n— Работа по 44-ФЗ / 223-ФЗ\n\n[Ваше имя] | [Ваша компания]`,
+        fu:`Тема: Документы готовы\n\nДобрый день, [Имя]!\n\nПродублирую — готовы к тендеру.\n\n[Ваше имя]`}}
+  },
+  it:{
+    small:{
+      call:{goal:'Выявить боли, предложить демо',
+        main:`— Добрый день, [Имя]!\n\nЭто [Ваше имя], [Ваша компания]. Работали с вами несколько месяцев назад.\n\nКак идёт работа с нашим решением? Есть задачи которые пока не закрыты?`,
+        obj1:`«Всё устраивает»\n\n— Отлично! Тогда расскажу про новые модули — появились функции которые часто нужны командам вашего размера. Готов показать за 15 минут.`,
+        obj2:`«Дороговато»\n\n— Понимаю. Давайте посмотрим что можно оптимизировать — иногда часть функций перекрывает более доступный тариф.`},
+      wa:{goal:'Предложить новый функционал',
+        main:`Здравствуйте, [Имя]!\n\nЭто [Ваше имя], [Ваша компания]. Работали вместе несколько месяцев назад.\n\nПишу — появился новый функционал для команд вашего размера.\n\nЕсть 15 минут посмотреть?`,
+        fu:`Добрый день, [Имя]!\n\nПисал пару дней назад. Когда будут вопросы по продукту — пишите.`},
+      email:{goal:'Назначить демо',
+        main:`Тема: Новый функционал для вашей команды\n\nЗдравствуйте, [Имя]!\n\nРаботали вместе несколько месяцев назад.\n\nПоявился новый функционал — покажу за 15 минут онлайн, без обязательств.\n\nКогда удобно?\n\n[Ваше имя] | [Ваша компания]`,
+        fu:`Тема: 15 минут на демо?\n\nДобрый день, [Имя]!\n\nПродублирую — готов показать новый функционал когда удобно.\n\n[Ваше имя]`}},
+    medium:{
+      call:{goal:'Предложить расширение',
+        main:`— Добрый день, [Имя].\n\nЭто [Ваше имя], [Ваша компания]. Работали по внедрению решения.\n\nКак команда пользуется системой? Есть задачи которые сейчас не закрыты?`,
+        obj1:`«Всё хорошо»\n\n— Рад слышать! Тогда расскажу про новые модули — хорошо дополняют текущую конфигурацию.`,
+        obj2:`«Команда не всё использует»\n\n— Это частая история. Могу организовать короткое обучение — повышает adoption на 40–60%.`},
+      wa:{goal:'Предложить апгрейд',
+        main:`Здравствуйте, [Имя]!\n\nЭто [Ваше имя], [Ваша компания]. Работали по внедрению решения.\n\nПишу — появились новые модули которые хорошо дополняют то что уже у вас есть.\n\nЕсть 15 минут показать?`,
+        fu:`Добрый день, [Имя]!\n\nПродублирую — готов показать новые возможности онлайн.`},
+      email:{goal:'Назначить встречу',
+        main:`Тема: Новые возможности для вашей команды\n\nЗдравствуйте, [Имя]!\n\nРаботали по внедрению решения.\n\nПоявились новые модули и интеграции.\n\nГотов провести демонстрацию — 20 минут онлайн.\n\n[Ваше имя] | [Ваша компания]`,
+        fu:`Тема: Демо новых возможностей\n\nДобрый день, [Имя]!\n\nПродублирую — готов показать онлайн за 20 минут.\n\n[Ваше имя]`}},
+    corp:{
+      call:{goal:'Предложить расширение контракта',
+        main:`— Добрый день, [Имя].\n\nЭто [Ваше имя], [Ваша компания]. Работаем с вами по решению.\n\nКак оцениваете результаты? Есть новые задачи которые планируете закрывать автоматизацией?`,
+        obj1:`«Пока смотрим»\n\n— Понимаю. Предлагаю провести QBR — разберём метрики и посмотрим куда двигаться дальше. Займёт 30 минут.`,
+        obj2:`«Нужно согласовать бюджет»\n\n— Готов подготовить ROI-презентацию — часто помогает ускорить согласование.`},
+      wa:{goal:'Назначить QBR',
+        main:`Здравствуйте, [Имя]!\n\nЭто [Ваше имя], [Ваша компания]. Работаем вместе по решению.\n\nПредлагаю провести короткий QBR — подведём итоги и обсудим план на следующий квартал.\n\nКогда удобно?`,
+        fu:`Добрый день, [Имя]!\n\nПродублирую предложение по QBR — готов подстроиться под ваш график.`},
+      email:{goal:'Провести QBR, расширить контракт',
+        main:`Тема: QBR и план на следующий квартал\n\nЗдравствуйте, [Имя]!\n\nРаботаем вместе по решению.\n\nПредлагаю провести QBR:\n— Метрики за период\n— Приоритеты\n— План развития\n\nКогда удобно встретиться?\n\n[Ваше имя] | [Ваша компания]`,
+        fu:`Тема: Готов к QBR\n\nДобрый день, [Имя]!\n\nГотов провести QBR онлайн в удобное время.\n\n[Ваше имя]`}},
+    gov:{
+      call:{goal:'Продлить или расширить контракт',
+        main:`— Добрый день, [Имя].\n\nЭто [Ваше имя], [Ваша компания]. Работаем по контракту на решение.\n\nПланируется ли продление или расширение на следующий период?`,
+        obj1:`«Будем рассматривать»\n\n— Понимаю. Готов направить КП с техническими характеристиками — для включения в план закупок.`,
+        obj2:`«Нужно пройти тендер»\n\n— Готовы участвовать — все документы и лицензии в наличии.`},
+      wa:{goal:'Уточнить план закупок ПО',
+        main:`Здравствуйте, [Имя].\n\nЭто [Ваше имя], [Ваша компания]. Работаем по решению.\n\nПланируется ли продление контракта или расширение на следующий период?`,
+        fu:`Добрый день, [Имя].\n\nПродублирую — готовы подготовить все документы для продления.`},
+      email:{goal:'Попасть в план закупок',
+        main:`Тема: Продление / расширение контракта\n\nЗдравствуйте, [Имя]!\n\nРаботаем по решению.\n\nГотовы предоставить:\n— КП с техническими характеристиками\n— Документацию и сертификаты\n— Работа по 44-ФЗ / 223-ФЗ\n\n[Ваше имя] | [Ваша компания]`,
+        fu:`Тема: Документы готовы\n\nДобрый день, [Имя]!\n\nГотовы к продлению — документы предоставим оперативно.\n\n[Ваше имя]`}}
+  },
+  logistics:{
+    small:{
+      call:{goal:'Узнать новые маршруты',
+        main:`— Добрый день, [Имя]!\n\nЭто [Ваше имя], [Ваша компания]. Отправляли грузы для вас несколько месяцев назад.\n\nЗвоню — есть новые отправки?`,
+        obj1:`«Пока тихо»\n\n— Понятно. Держите нас в уме — тарифы для постоянных клиентов, расчёт за час.`,
+        obj2:`«Работаем с другими»\n\n— Хорошо. Если нужно сравнить тарифы — пришлю расчёт по вашим маршрутам быстро.`},
+      wa:{goal:'Узнать о новых отправках',
+        main:`Здравствуйте, [Имя]!\n\nЭто [Ваше имя], [Ваша компания]. Отправляли грузы для вас.\n\nЕсть новые отправки? Расчёт за час.`,
+        fu:`Добрый день, [Имя]!\n\nКогда появятся отправки — пишите, рассчитаем за час.`},
+      email:{goal:'Получить запрос на расчёт',
+        main:`Тема: Тарифы по вашим маршрутам\n\nЗдравствуйте, [Имя]!\n\nОтправляли грузы для вас несколько месяцев назад.\n\nЕсли есть новые отправки — готовы рассчитать тариф и подготовить КП.\n\n[Ваше имя] | [Ваша компания]`,
+        fu:`Тема: Расчёт за час\n\nДобрый день, [Имя]!\n\nПродублирую — когда появятся отправки, рассчитаем за час.\n\n[Ваше имя]`}},
+    medium:{
+      call:{goal:'Предложить регулярные отправки',
+        main:`— Добрый день, [Имя].\n\nЭто [Ваше имя], [Ваша компания]. Работали по отправкам для вас.\n\nКак часто сейчас отправляете грузы? Есть маршруты которые хотите оптимизировать по стоимости?`,
+        obj1:`«Всё устраивает»\n\n— Рад слышать. Тогда расскажу про новые направления — иногда есть возможность снизить стоимость на регулярных маршрутах на 15–20%.`,
+        obj2:`«Дорого»\n\n— Понимаю. Давайте я сделаю расчёт по вашим маршрутам.`},
+      wa:{goal:'Предложить оптимизацию',
+        main:`Здравствуйте, [Имя]!\n\nЭто [Ваше имя], [Ваша компания]. Работали по отправкам для вас.\n\nЕсть возможность оптимизировать тарифы на регулярных маршрутах — готов сделать расчёт.`,
+        fu:`Добрый день, [Имя]!\n\nПродублирую — готов сделать расчёт по оптимизации ваших маршрутов.`},
+      email:{goal:'Получить запрос на пересмотр условий',
+        main:`Тема: Оптимизация логистики\n\nЗдравствуйте, [Имя]!\n\nРаботали по вашим отправкам.\n\nЕсть возможность снизить расходы на регулярных маршрутах.\n\nГотов подготовить сравнительный расчёт.\n\n[Ваше имя] | [Ваша компания]`,
+        fu:`Тема: Расчёт готов\n\nДобрый день, [Имя]!\n\nПродублирую — готов выслать расчёт.\n\n[Ваше имя]`}},
+    corp:{
+      call:{goal:'Войти в пул провайдеров',
+        main:`— Добрый день, [Имя].\n\nЭто [Ваше имя], [Ваша компания]. Работали по вашим отправкам.\n\nПланируете ли пересмотр пула логистических провайдеров в этом сезоне?`,
+        obj1:`«Работаем с текущими»\n\n— Понимаю. Могу направить актуальные тарифы — полезно для тендера.`,
+        obj2:`«Закупаем через тендер»\n\n— Готовы участвовать — все документы и лицензии в наличии.`},
+      wa:{goal:'Попасть в список провайдеров',
+        main:`Здравствуйте, [Имя]!\n\nЭто [Ваше имя], [Ваша компания]. Работали по вашим отправкам.\n\nЕсли рассматриваете провайдеров на новый период — готов направить тарифы и портфолио.`,
+        fu:`Добрый день, [Имя]!\n\nПродублирую — готовы к тендеру, все документы в наличии.`},
+      email:{goal:'Попасть в тендер',
+        main:`Тема: Логистические услуги — предложение\n\nЗдравствуйте, [Имя]!\n\nРаботали по вашим отправкам.\n\nНаши преимущества:\n— Покрытие по всей РФ и СНГ\n— Собственный автопарк и склады\n— Работа по 44-ФЗ / 223-ФЗ\n— Страхование грузов\n\nГотов направить тарифы и портфолио.\n\n[Ваше имя] | [Ваша компания]`,
+        fu:`Тема: Тарифы и документы готовы\n\nДобрый день, [Имя]!\n\nПродублирую — готовы к тендеру.\n\n[Ваше имя]`}},
+    gov:{
+      call:{goal:'Попасть в план закупок',
+        main:`— Добрый день, [Имя].\n\nЭто [Ваше имя], [Ваша компания]. Выполняли перевозки для вашей организации.\n\nПланируются ли в этом году закупки транспортных услуг?`,
+        obj1:`«Закупаем через торги»\n\n— Готовы участвовать — работаем по 44-ФЗ, все лицензии в наличии.`,
+        obj2:`«Нет бюджета»\n\n— Понимаю. Пришлю актуальный прайс для планирования.`},
+      wa:{goal:'Узнать план закупок',
+        main:`Здравствуйте, [Имя].\n\nЭто [Ваше имя], [Ваша компания]. Выполняли перевозки для вашей организации.\n\nПланируются ли транспортные закупки в этом году?`,
+        fu:`Добрый день, [Имя].\n\nПродублирую — готовы к тендеру, все документы в наличии.`},
+      email:{goal:'Попасть в план закупок',
+        main:`Тема: Транспортные услуги — КП\n\nЗдравствуйте, [Имя]!\n\nВыполняли перевозки для вашей организации.\n\nГотовы предоставить:\n— КП с тарифами\n— Лицензии и допуски\n— Работа по 44-ФЗ / 223-ФЗ\n\n[Ваше имя] | [Ваша компания]`,
+        fu:`Тема: Документы готовы\n\nДобрый день, [Имя]!\n\nГотовы к тендеру — документы предоставим оперативно.\n\n[Ваше имя]`}}
+  }
+};
+// ═══════════════════════════════════
+// NAV
+// ═══════════════════════════════════
+function showPg(name){
+  document.querySelectorAll('.page').forEach(p=>{p.classList.remove('active');p.style.display='none'});
+  document.querySelectorAll('.bni').forEach(b=>b.classList.remove('on'));
+  const pg=document.getElementById('pg-'+name);
+  const bn=document.getElementById('bni-'+name);
+  if(pg){pg.style.display='block';pg.classList.add('active')}
+  if(bn)bn.classList.add('on');
+  if(name==='history') renderH();
+  if(name==='tasks')   renderTasks();
+  if(name==='cycle')   renderCycle();
+}
+
+function goStep(n){
+  document.getElementById('step-'+curStep)?.classList.remove('active');
+  curStep=n;
+  document.getElementById('step-'+n)?.classList.add('active');
+  updateProg();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function updateProg(){
+  const pw=document.getElementById('prog-wrap');
+  if(curStep===0){pw.style.display='none';return}
+  pw.style.display='block';
+  document.getElementById('prog-fl').style.width=(curStep/4*100)+'%';
+  const lbls=['','Компания','Сегмент','Канал','Скрипт готов'];
+  document.getElementById('prog-lbl').textContent=curStep+' / 4 — '+lbls[curStep];
+  document.getElementById('prog-co').textContent=S.company?.shortName||'';
+}
+
+// ═══════════════════════════════════
+// INDUSTRY
+// ═══════════════════════════════════
+function selInd(el){
+  document.querySelectorAll('.ic').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel'); curInd=el.dataset.ind;
+  document.getElementById('btn-ind').disabled=false;
+}
+function confirmInd(){
+  if(!curInd)return;
+  localStorage.setItem('xp_ind',curInd);
+  document.getElementById('ind-pill').textContent=IND[curInd].label;
+  goStep(1);
+}
+function resetInd(){
+  curInd=''; localStorage.removeItem('xp_ind');
+  document.getElementById('ind-pill').textContent='— отрасль';
+  document.getElementById('btn-ind').disabled=true;
+  document.querySelectorAll('.ic').forEach(c=>c.classList.remove('sel'));
+  goStep(0);
+}
+
+// ═══════════════════════════════════
+// MODE
+// ═══════════════════════════════════
+function setMode(m){
+  mode=m;
+  document.getElementById('mbAI').classList.toggle('on',m==='ai');
+  document.getElementById('mbMan').classList.toggle('on',m==='manual');
+  document.getElementById('ai-sec').style.display   = m==='ai'?'block':'none';
+  document.getElementById('man-sec').style.display  = m==='manual'?'block':'none';
+}
+
+// ═══════════════════════════════════
+// INN SEARCH — FIX: правильная инициализация карточки
+// ═══════════════════════════════════
+async function doINN(){
+  const inp=document.getElementById('inn-inp');
+  const raw=inp.value.replace(/\D/g,'');
+  if(raw.length!==10&&raw.length!==12){toast('ИНН — 10 или 12 цифр');return}
+
+  const ldr=document.getElementById('inn-ldr');
+  const card=document.getElementById('co-card');
+  const lkw=document.getElementById('lk-wrap');
+  const btn=document.getElementById('btn-s1');
+
+  ldr.style.display='block';
+  card.style.display='none';
+  lkw.style.display='none';
+  btn.disabled=true;
+
+  try{
+    const res=await fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party',{
+      method:'POST',mode:'cors',
+      headers:{'Content-Type':'application/json','Accept':'application/json',
+        'Authorization':'Token '+DDT,'X-Secret':DDS},
+      body:JSON.stringify({query:raw,count:1})
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    const item=data.suggestions?.[0];
+    if(!item) throw new Error('not_found');
+
+    const d=item.data;
+    const name=d.name?.short_with_opf||item.value||'—';
+    const opfFull=d.opf?.full||'';
+    const active=d.state?.status==='ACTIVE';
+    const head=d.management?.name||'—';
+    const headPos=d.management?.post||'';
+    const city=d.address?.data?.city||d.address?.data?.settlement||d.address?.data?.region||'—';
+    const phones=d.phones?.map(p=>p.value).filter(Boolean)||[];
+    const emails=d.emails?.map(e=>e.value).filter(Boolean)||[];
+    const emp=d.employee_count||null;
+
+    const isGov=['государствен','муниципальн','федеральн','казённ'].some(w=>opfFull.toLowerCase().includes(w));
+    let autoSeg='small';
+    if(isGov) autoSeg='gov';
+    else if(emp>100) autoSeg='corp';
+    else if(emp>15)  autoSeg='medium';
+
+    S.company={shortName:name,active,head,headPos,city,phones,emails,inn:raw,emp,autoSeg};
+    S.fio=parseFIO(head); S.inn=raw; S.seg=autoSeg;
+
+    document.querySelectorAll('.sc').forEach(c=>c.classList.toggle('sel',c.dataset.s===autoSeg));
+    document.getElementById('btn-s2').disabled=false;
+
+    const ph=phones.length
+      ?phones.map(p=>`<div class="chip" onclick="navigator.clipboard.writeText('${p}');toast('Скопировано','ok')">📞 ${p}</div>`).join('')
+      :'<span style="font-size:11px;color:var(--t3)">—</span>';
+    const em=emails.length
+      ?emails.map(e=>`<div class="chip" onclick="navigator.clipboard.writeText('${e}');toast('Скопировано','ok')">✉️ ${e}</div>`).join('')
+      :'<span style="font-size:11px;color:var(--t3)">—</span>';
+
+    card.innerHTML=`
+      <div class="co-hd">
+        <div class="co-nm">${name}</div>
+        <div class="st ${active?'ok':'err'}">${active?'Действует':'Ликвидирована'}</div>
+      </div>
+      <div class="co-body">
+        <div class="ci-row"><div class="ci-ico">👤</div><div><div class="ci-lbl">Руководитель</div><div class="ci-val">${head}${headPos?' — '+headPos:''}</div></div></div>
+        <div class="ci-row"><div class="ci-ico">🏙️</div><div><div class="ci-lbl">Город</div><div class="ci-val">${city}</div></div></div>
+        ${emp?`<div class="ci-row"><div class="ci-ico">👥</div><div><div class="ci-lbl">Сотрудников</div><div class="ci-val">${emp} чел. — ${segLabel(autoSeg)}</div></div></div>`:''}
+        <div class="ci-sec">Контакты</div>
+        <div class="ci-row"><div class="ci-ico">📞</div><div><div class="ci-lbl">Телефоны</div><div class="ci-val">${ph}</div></div></div>
+        <div class="ci-row"><div class="ci-ico">📧</div><div><div class="ci-lbl">Email</div><div class="ci-val">${em}</div></div></div>
+      </div>`;
+    card.style.display='block';
+    btn.disabled=false;
+    renderLock(raw);
+    loadFinMin(raw);
+  }catch(e){
+    const msg=e.message==='not_found'?'Компания не найдена — проверьте ИНН':'Ошибка соединения — проверьте интернет';
+    card.innerHTML=`<div class="co-hd"><div class="co-nm" style="color:var(--err)">${msg}</div></div>`;
+    card.style.display='block';
+    btn.disabled=true;
+  }finally{
+    ldr.style.display='none';
+  }
+}
+
+function segLabel(s){return SEG[s]?.label||s}
+
+async function loadFinMin(inn){
+  try{
+    const r1=await fetch(`https://bo.nalog.ru/nbo/organizations/search?query=${inn}&page=0`);
+    if(!r1.ok)return;
+    const d1=await r1.json();
+    const org=d1.content?.[0];
+    if(!org)return;
+    const r2=await fetch(`https://bo.nalog.ru/nbo/organizations/${org.id}/bfo/`);
+    if(!r2.ok)return;
+    const d2=await r2.json();
+    const reps=Array.isArray(d2)?d2:d2.content||[];
+    const lat=reps.sort((a,b)=>(b.year||0)-(a.year||0))[0];
+    if(!lat)return;
+    const inc=lat.revenue||lat['2110'];
+    if(!inc)return;
+    const card=document.getElementById('co-card');
+    if(!card)return;
+    const fin=document.createElement('div');
+    fin.style.cssText='padding:0 13px 10px;font-size:11px;color:var(--t3)';
+    fin.innerHTML=`💰 Выручка ${lat.year}: <span style="color:var(--ok);font-weight:600">${fmtMoney(inc)}</span>`;
+    card.appendChild(fin);
+    if(S.company) S.company.fin={year:lat.year,income:inc};
+  }catch{}
+}
+
+function skipINN(){
+  S.inn=''; S.company=null; S.fio=null;
+  document.getElementById('btn-s1').disabled=false;
+  goStep(2);
+}
+
+// Lock
+async function renderLock(inn){
+  const w=document.getElementById('lk-wrap');
+  w.style.display='block';
+  w.innerHTML=`<div class="lk mine"><div class="lk-ico">⟳</div><div><div class="lk-sub">Проверяем закрепление…</div></div></div>`;
+  let lock=null;
+  try{const r=await window.storage.get(LKP+inn,true);lock=r?JSON.parse(r.value):null}catch{}
+  const me=localStorage.getItem('xp_mgr')||'Вы';
+  if(!lock){
+    w.innerHTML=`<div class="lk mine"><div class="lk-ico">🔓</div><div><div class="lk-ttl">Клиент свободен</div><div class="lk-sub">Никто не работает с этой компанией</div><div class="lk-btn" onclick="doLock('${inn}')">Закрепить за собой</div></div></div>`;
+  }else if(lock.manager===me){
+    const dt=lock.ts?' · '+new Date(lock.ts).toLocaleDateString('ru-RU'):'';
+    w.innerHTML=`<div class="lk mine"><div class="lk-ico">✓</div><div><div class="lk-ttl">Ваш клиент${dt}</div><div class="lk-sub">Закреплён за вами</div><div class="lk-btn danger" onclick="doUnlock('${inn}')">Снять закрепление</div></div></div>`;
+  }else{
+    w.innerHTML=`<div class="lk taken"><div class="lk-ico">🔒</div><div><div class="lk-ttl">Занято — ${lock.manager}</div><div class="lk-sub">Обратитесь к коллеге или выберите другого клиента</div></div></div>`;
+  }
+}
+async function doLock(inn){
+  const me=localStorage.getItem('xp_mgr')||'Вы';
+  try{await window.storage.set(LKP+inn,JSON.stringify({manager:me,ts:Date.now()}),true);toast('Клиент закреплён','ok');renderLock(inn)}catch{toast('Нет доступа к shared storage')}
+}
+async function doUnlock(inn){
+  try{await window.storage.delete(LKP+inn,true);toast('Закрепление снято');renderLock(inn)}catch{}
+}
+
+// ═══════════════════════════════════
+// SEGMENT
+// ═══════════════════════════════════
+function selSeg(el){
+  document.querySelectorAll('.sc').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel'); S.seg=el.dataset.s;
+  const hint=document.getElementById('seg-hint');
+  hint.textContent=SEG[S.seg]?.hint||'';
+  hint.style.display='block';
+  document.getElementById('btn-s2').disabled=false;
+}
+
+// ═══════════════════════════════════
+// CHANNEL
+// ═══════════════════════════════════
+function selCh(el){
+  document.querySelectorAll('#ch-row .pill').forEach(p=>p.classList.remove('sel'));
+  el.classList.add('sel'); S.ch=el.dataset.ch;
+  const objRow=document.getElementById('obj-row');
+  if(objRow) objRow.style.display=S.ch==='call'?'flex':'none';
+}
+
+// ═══════════════════════════════════
+// PURCHASE HINTS
+// ═══════════════════════════════════
+function onPurInput(v){
+  S.purchase=v;
+  if(!curInd)return;
+  const hints=IND[curInd]?.hints||[];
+  const low=v.toLowerCase();
+  let items=[];
+  for(const h of hints){
+    if(h.match.some(m=>low.includes(m))){items=h.items;break}
+  }
+  const wrap=document.getElementById('hint-wrap');
+  const chips=document.getElementById('hint-chips');
+  if(!items.length){wrap.style.display='none';return}
+  chips.innerHTML=items.map(it=>`
+    <div class="hint-item" onclick="appendHint('${it.nm.replace(/'/g,"\\'")}')">
+      <div class="h-ico">${it.ico}</div>
+      <div><div class="h-nm">${it.nm}</div><div class="h-why">${it.why}</div><div class="h-pr">${it.price}</div></div>
+    </div>`).join('');
+  wrap.style.display='block';
+}
+
+function appendHint(nm){
+  const inp=document.getElementById('pur-what');
+  inp.value=inp.value?(inp.value+', '+nm):nm;
+  S.purchase=inp.value;
+  toast('Добавлено: '+nm,'ok');
+}
+
+function fmtSum(el){
+  const raw=el.value.replace(/\D/g,'');
+  S.purchaseSum=raw?parseInt(raw):null;
+  el.value=raw?parseInt(raw).toLocaleString('ru-RU')+' ₽':'';
+}
+
+// ═══════════════════════════════════
+// GENERATE
+// ═══════════════════════════════════
+async function generate(){
+  if(!S.seg){toast('Выберите сегмент клиента');goStep(2);return}
+  if(!curInd){toast('Выберите отрасль');goStep(0);return}
+
+  const btn=document.getElementById('btn-gen');
+  const spin=document.getElementById('gen-spin');
+  const txt=document.getElementById('gen-txt');
+  btn.disabled=true; spin.style.display='block'; txt.textContent='Генерируем…';
+  S.ctx=document.getElementById('ai-ctx')?.value||'';
+
+  if(mode==='manual'){
+    buildFromLib(); goStep(4);
+    btn.disabled=false; spin.style.display='none'; txt.textContent='Сгенерировать скрипт';
+    return;
+  }
+
+  try{await generateAI()}
+  catch(e){
+    console.warn('AI error, fallback:',e);
+    buildFromLib();
+  }
+  goStep(4);
+  btn.disabled=false; spin.style.display='none'; txt.textContent='Сгенерировать скрипт';
+}
+
+function buildFromLib(){
+  const ind=LIB[curInd];
+  if(!ind){buildFallback();return}
+  const seg=ind[S.seg]||ind['small'];
+  const ch=S.ch;
+  const entry=seg[ch]||seg['call'];
+  if(!entry){buildFallback();return}
+
+  const fn=S.fio?.first||'[Имя]';
+  const co=S.company?.shortName||'[Компания]';
+  const fix=t=>(t||'').replace(/\[Имя\]/g,fn);
+
+  S.scripts={};
+  S.goal=entry.goal||'';
+  if(ch==='call'){
+    S.scripts.main=fix(entry.main);
+    S.scripts.obj1=fix(entry.obj1);
+    S.scripts.obj2=fix(entry.obj2);
+  }else{
+    S.scripts.main=fix(entry.main);
+    S.scripts.fu=fix(entry.fu);
+  }
+
+  // upsell from hints
+  S.upsell=[];
+  if(S.purchase&&curInd){
+    const hints=IND[curInd]?.hints||[];
+    const low=S.purchase.toLowerCase();
+    for(const h of hints){
+      if(h.match.some(m=>low.includes(m))){S.upsell=h.items;break}
+    }
+  }
+  renderResult();
+}
+
+async function generateAI(){
+  const indLabel=IND[curInd]?.label||curInd;
+  const segLabel2=SEG[S.seg]?.label||S.seg;
+  const chLabel={'call':'Телефонный звонок','wa':'WhatsApp','email':'Email'}[S.ch]||S.ch;
+  const fn=S.fio?.first||'[Имя]';
+  const co=S.company?.shortName||'';
+  const head=S.company?.head||'';
+  const city=S.company?.city||'';
+  const emp=S.company?.emp?`${S.company.emp} сотрудников`:'';
+  const fin=S.company?.fin?`выручка ${S.company.fin.year}: ${fmtMoney(S.company.fin.income)}`:'';
+  const pur=S.purchase||'';
+  const sum=S.purchaseSum?S.purchaseSum.toLocaleString('ru-RU')+' ₽':'';
+  const ctx=S.ctx||'';
+
+  const prompt=`Ты — эксперт по B2B-продажам. Составь скрипты повторного контакта с клиентом.
+
+ОТРАСЛЬ: ${indLabel}
+СЕГМЕНТ: ${segLabel2}
+КАНАЛ: ${chLabel}
+${co?'КОМПАНИЯ: '+co:''}
+${head?'РУКОВОДИТЕЛЬ: '+head:''}
+${city?'ГОРОД: '+city:''}
+${emp?'СОТРУДНИКОВ: '+emp:''}
+${fin?'ФИНАНСЫ: '+fin:''}
+${pur?'ЧТО ЗАКАЗЫВАЛ: '+pur:''}
+${sum?'СУММА ЗАКАЗА: '+sum:''}
+${ctx?'КОНТЕКСТ: '+ctx:''}
+
+Верни ТОЛЬКО JSON (без markdown, без пояснений):
+${S.ch==='call'?`{
+  "goal": "цель звонка одним предложением",
+  "main": "вводный скрипт звонка (используй имя ${fn}, уважительный тон, конкретно под отрасль)",
+  "obj1": "ответ на возражение 1 — типичное для ${indLabel}",
+  "obj2": "ответ на возражение 2 — типичное для ${indLabel}",
+  "upsell": [{"ico":"emoji","nm":"название","why":"почему нужно","price":"цена"}]
+}`:`{
+  "goal": "цель сообщения",
+  "main": "основное сообщение (под ${chLabel}, используй имя ${fn})",
+  "fu": "follow-up через 3 дня (короткое)",
+  "upsell": [{"ico":"emoji","nm":"название","why":"почему нужно","price":"цена"}]
+}`}`;
+
+  const resp=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      model:AIM, max_tokens:1500,
+      messages:[{role:'user',content:prompt}]
+    })
+  });
+  if(!resp.ok) throw new Error('API '+resp.status);
+  const data=await resp.json();
+  const raw=data.content?.[0]?.text||'';
+  const clean=raw.replace(/```json|```/g,'').trim();
+  const parsed=JSON.parse(clean);
+
+  S.goal=parsed.goal||'';
+  S.scripts={
+    main:parsed.main||'',
+    obj1:parsed.obj1||'',
+    obj2:parsed.obj2||'',
+    fu:parsed.fu||''
+  };
+  S.upsell=Array.isArray(parsed.upsell)?parsed.upsell:[];
+  renderResult();
+}
+
+function buildFallback(){
+  S.scripts={main:'Добрый день! Хотел уточнить — есть ли у вас актуальные задачи по нашей теме?'};
+  S.goal='Выйти на контакт'; S.upsell=[];
+  renderResult();
+}
+
+// ═══════════════════════════════════
+// RENDER RESULT
+// ═══════════════════════════════════
+function renderResult(){
+  const info=document.getElementById('edit-info');
+  const indL=IND[curInd]?.label||'—';
+  const segL=SEG[S.seg]?.label||'—';
+  const chL={'call':'📞 Звонок','wa':'💬 WhatsApp','email':'📧 Email'}[S.ch]||'—';
+  const co=S.company?.shortName||'';
+  info.innerHTML=`<strong>${co||indL}</strong>${co?' · '+indL:''} · ${segL} · ${chL}`;
+
+  const ctxBar=document.getElementById('ctx-bar-wrap');
+  const ctxTxt=document.getElementById('ctx-bar');
+  if(S.purchase||S.ctx){
+    ctxBar.style.display='block';
+    ctxTxt.innerHTML=(S.purchase?`<strong>Заказывал:</strong> ${S.purchase} `:'')+(S.purchaseSum?`· <strong>Сумма:</strong> ${S.purchaseSum.toLocaleString('ru-RU')} ₽ `:'')+(S.ctx?`· <strong>Контекст:</strong> ${S.ctx}`:'');
+  }else{
+    ctxBar.style.display='none';
+  }
+
+  // Tabs
+  const tabs=document.getElementById('out-tabs');
+  const tabList=S.ch==='call'
+    ?[{id:'call',label:'📞 Скрипт'}]
+    :[{id:'main',label:S.ch==='wa'?'💬 Сообщение':'📧 Email'},{id:'fu',label:'🔁 Follow-up'}];
+  tabs.innerHTML=tabList.map((t,i)=>`<div class="stab${i===0?' on':''}" data-tab="${t.id}" onclick="selTab(this)">${t.label}</div>`).join('');
+
+  // Obj pills
+  const objRow=document.getElementById('obj-row');
+  objRow.style.display=S.ch==='call'?'flex':'none';
+  if(S.ch==='call') curObj='main';
+
+  // Populate scripts
+  showScript();
+
+  // Upsell
+  const upB=document.getElementById('up-block');
+  const upL=document.getElementById('up-list');
+  if(S.upsell&&S.upsell.length){
+    upL.innerHTML=S.upsell.map(u=>`
+      <div class="up-item">
+        <div class="up-ico">${u.ico||'💡'}</div>
+        <div><div class="up-nm">${u.nm}</div><div class="up-pr">${u.price||''}</div><div class="up-why">${u.why||''}</div></div>
+      </div>`).join('');
+    upB.style.display='block';
+  }else{
+    upB.style.display='none';
+  }
+
+  // fu-card
+  const fuCard=document.getElementById('fu-card');
+  if(S.scripts?.fu&&S.ch!=='call'){
+    document.getElementById('fu-st').innerHTML=fmtScript(S.scripts.fu);
+    fuCard.style.display='block';
+  }else{
+    fuCard.style.display='none';
+  }
+
+  document.getElementById('card-ttl').textContent={'call':'Скрипт звонка','wa':'Сообщение в WhatsApp','email':'Текст письма'}[S.ch]||'Скрипт';
+  document.getElementById('card-goal').textContent=S.goal||'';
+}
+
+function showScript(){
+  const el=document.getElementById('main-st');
+  const scr=S.scripts||{};
+  if(S.ch==='call'){
+    const txt=curObj==='obj1'?scr.obj1:curObj==='obj2'?scr.obj2:scr.main;
+    el.innerHTML=fmtScript(txt||'');
+  }else{
+    el.innerHTML=fmtScript(scr.main||'');
+  }
+}
+
+function selObj(el){
+  document.querySelectorAll('.opill').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on'); curObj=el.dataset.obj;
+  showScript();
+}
+
+function selTab(el){
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  const tab=el.dataset.tab;
+  if(tab==='fu'){
+    document.getElementById('main-st').innerHTML=fmtScript(S.scripts?.fu||'');
+    document.getElementById('card-ttl').textContent='Follow-up · День 3';
+    document.getElementById('card-goal').textContent='Напоминание без давления';
+  }else{
+    showScript();
+    document.getElementById('card-ttl').textContent={'call':'Скрипт звонка','wa':'Сообщение в WhatsApp','email':'Текст письма'}[S.ch]||'Скрипт';
+    document.getElementById('card-goal').textContent=S.goal||'';
+  }
+}
+
+function fmtScript(txt){
+  if(!txt)return '';
+  return txt
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.*?)\*\*/g,'<span class="hl">$1</span>')
+    .replace(/\[(.*?)\]/g,'<span class="hln">[$1]</span>');
+}
+
+// ═══════════════════════════════════
+// COPY / EXPORT
+// ═══════════════════════════════════
+function copyEl(id,btn){
+  const el=document.getElementById(id);
+  const txt=el?.innerText||el?.textContent||'';
+  navigator.clipboard.writeText(txt).then(()=>{
+    if(btn){btn.textContent='✓ Скопировано';btn.classList.add('done');setTimeout(()=>{btn.textContent='Копировать';btn.classList.remove('done')},2000)}
+    toast('Скопировано в буфер','ok');
+  });
+}
+
+function copyAll(){
+  const parts=[];
+  const scr=S.scripts||{};
+  if(S.ch==='call'){
+    if(scr.main) parts.push('=== ВВОДНЫЙ ===\n'+scr.main);
+    if(scr.obj1) parts.push('\n=== ВОЗРАЖЕНИЕ 1 ===\n'+scr.obj1);
+    if(scr.obj2) parts.push('\n=== ВОЗРАЖЕНИЕ 2 ===\n'+scr.obj2);
+  }else{
+    if(scr.main) parts.push('=== ОСНОВНОЕ ===\n'+scr.main);
+    if(scr.fu)   parts.push('\n=== FOLLOW-UP ===\n'+scr.fu);
+  }
+  if(S.upsell?.length) parts.push('\n=== ДОПРОДАЖА ===\n'+S.upsell.map(u=>`• ${u.nm} — ${u.price}`).join('\n'));
+  navigator.clipboard.writeText(parts.join('\n')).then(()=>toast('Всё скопировано','ok'));
+}
+
+function expTxt(){
+  const lines=[];
+  lines.push('xPower Sales Script');
+  lines.push('===================');
+  lines.push(`Дата: ${new Date().toLocaleString('ru-RU')}`);
+  lines.push(`Отрасль: ${IND[curInd]?.label||curInd}`);
+  lines.push(`Сегмент: ${SEG[S.seg]?.label||S.seg}`);
+  lines.push(`Канал: ${{call:'Звонок',wa:'WhatsApp',email:'Email'}[S.ch]||S.ch}`);
+  if(S.company?.shortName) lines.push(`Компания: ${S.company.shortName}`);
+  if(S.purchase) lines.push(`Заказывал: ${S.purchase}`);
+  lines.push('');
+  const scr=S.scripts||{};
+  if(S.ch==='call'){
+    if(scr.main) lines.push('--- ВВОДНЫЙ ---\n'+scr.main);
+    if(scr.obj1) lines.push('\n--- ВОЗРАЖЕНИЕ 1 ---\n'+scr.obj1);
+    if(scr.obj2) lines.push('\n--- ВОЗРАЖЕНИЕ 2 ---\n'+scr.obj2);
+  }else{
+    if(scr.main) lines.push('--- ОСНОВНОЕ ---\n'+scr.main);
+    if(scr.fu)   lines.push('\n--- FOLLOW-UP ---\n'+scr.fu);
+  }
+  if(S.upsell?.length) lines.push('\n--- ДОПРОДАЖА ---\n'+S.upsell.map(u=>`• ${u.nm} — ${u.price}\n  ${u.why}`).join('\n'));
+  const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`xpower_script_${Date.now()}.txt`;
+  a.click();
+  toast('Файл сохранён','ok');
+}
+
+// ═══════════════════════════════════
+// HISTORY
+// ═══════════════════════════════════
+function saveH(){
+  if(!S.scripts?.main){toast('Нет скрипта для сохранения');return}
+  const entry={
+    id:Date.now(),
+    ts:Date.now(),
+    ind:curInd,
+    seg:S.seg,
+    ch:S.ch,
+    co:S.company?.shortName||'',
+    goal:S.goal,
+    scripts:S.scripts,
+    upsell:S.upsell,
+    purchase:S.purchase,
+    ctx:S.ctx
+  };
+  HIST.unshift(entry);
+  if(HIST.length>60) HIST=HIST.slice(0,60);
+  localStorage.setItem('xp_hist',JSON.stringify(HIST));
+  toast('Сохранено в историю','ok');
+}
+
+function renderH(){
+  const el=document.getElementById('h-list');
+  if(!HIST.length){
+    el.innerHTML=`<div class="empty"><div class="empty-ico">🕑</div><div class="empty-ttl">История пуста</div><div class="empty-sb">Сохранённые скрипты появятся здесь</div></div>`;
+    return;
+  }
+  el.innerHTML=HIST.map(h=>{
+    const d=new Date(h.ts);
+    const dt=d.toLocaleDateString('ru-RU')+' '+d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+    const tag=`${IND[h.ind]?.label||h.ind} · ${SEG[h.seg]?.label||h.seg} · ${{call:'📞',wa:'💬',email:'📧'}[h.ch]||''}`;
+    const prev=(h.scripts?.main||'').slice(0,120)+'…';
+    return `<div class="h-item" onclick="loadH(${h.id})">
+      <div class="h-top"><div class="h-nm">${h.co||'Без компании'}</div><div style="display:flex;align-items:center;gap:6px"><div class="h-tm">${dt}</div><button class="h-del" onclick="event.stopPropagation();delH(${h.id})">✕</button></div></div>
+      <div class="h-tag">${tag}</div>
+      <div class="h-prev">${prev}</div>
+    </div>`;
+  }).join('');
+}
+
+function loadH(id){
+  const h=HIST.find(x=>x.id===id);
+  if(!h)return;
+  curInd=h.ind; S.seg=h.seg; S.ch=h.ch;
+  S.company=h.co?{shortName:h.co}:null;
+  S.scripts=h.scripts; S.goal=h.goal; S.upsell=h.upsell||[];
+  S.purchase=h.purchase||''; S.ctx=h.ctx||'';
+  localStorage.setItem('xp_ind',curInd);
+  document.getElementById('ind-pill').textContent=IND[curInd]?.label||curInd;
+  showPg('builder');
+  renderResult();
+  goStep(4);
+  toast('Скрипт загружен из истории','ok');
+}
+
+function delH(id){
+  HIST=HIST.filter(x=>x.id!==id);
+  localStorage.setItem('xp_hist',JSON.stringify(HIST));
+  renderH();
+}
+
+function clearH(){
+  if(!confirm('Очистить всю историю?'))return;
+  HIST=[]; localStorage.removeItem('xp_hist'); renderH();
+}
+
+// ═══════════════════════════════════
+// TASKS
+// ═══════════════════════════════════
+function selPri(el){
+  document.querySelectorAll('.pri-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel'); tPri=el.dataset.pri;
+}
+
+function setTF(el){
+  document.querySelectorAll('.tf').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on'); tFilter=el.dataset.tf; renderTasks();
+}
+
+function addTask(){
+  const inp=document.getElementById('t-inp');
+  const txt=inp.value.trim();
+  if(!txt){toast('Введите текст задачи');return}
+  const dt=document.getElementById('t-date').value;
+  const co=document.getElementById('t-co').value.trim();
+  const task={id:Date.now(),txt,dt,co,pri:tPri,done:false};
+  TASKS.unshift(task);
+  localStorage.setItem('xp_tasks',JSON.stringify(TASKS));
+  inp.value='';
+  document.getElementById('t-date').value='';
+  document.getElementById('t-co').value='';
+  renderTasks(); updateBadge();
+  toast('Задача добавлена','ok');
+}
+
+function addTaskAuto(){
+  const co=S.company?.shortName||'';
+  const dt=new Date();
+  dt.setDate(dt.getDate()+3);
+  const dtStr=dt.toISOString().split('T')[0];
+  const ch={'call':'📞 Повторный звонок','wa':'💬 Follow-up в WhatsApp','email':'📧 Follow-up письмо'}[S.ch]||'Следующий контакт';
+  const task={id:Date.now(),txt:ch+(co?' — '+co:''),dt:dtStr,co,pri:'md',done:false};
+  TASKS.unshift(task);
+  localStorage.setItem('xp_tasks',JSON.stringify(TASKS));
+  renderTasks(); updateBadge();
+  toast('Напоминание добавлено на +3 дня','ok');
+}
+
+function toggleTask(id){
+  const t=TASKS.find(x=>x.id===id);
+  if(t){t.done=!t.done;localStorage.setItem('xp_tasks',JSON.stringify(TASKS));renderTasks();updateBadge()}
+}
+
+function delTask(id){
+  TASKS=TASKS.filter(x=>x.id!==id);
+  localStorage.setItem('xp_tasks',JSON.stringify(TASKS));
+  renderTasks(); updateBadge();
+}
+
+function renderTasks(){
+  const el=document.getElementById('task-list');
+  const today=new Date().toISOString().split('T')[0];
+  const tomorrow=new Date(Date.now()+86400000).toISOString().split('T')[0];
+
+  let filtered=TASKS;
+  if(tFilter==='today')   filtered=TASKS.filter(t=>t.dt===today&&!t.done);
+  if(tFilter==='overdue') filtered=TASKS.filter(t=>t.dt&&t.dt<today&&!t.done);
+  if(tFilter==='done')    filtered=TASKS.filter(t=>t.done);
+
+  if(!filtered.length){
+    el.innerHTML=`<div class="t-empty"><div style="font-size:32px;margin-bottom:8px;opacity:.3">${tFilter==='done'?'🏆':'✅'}</div><div style="font-size:13px;color:var(--t2);font-weight:600;margin-bottom:4px">${tFilter==='done'?'Нет выполненных задач':'Задач нет'}</div><div style="font-size:12px">Добавьте задачу выше</div></div>`;
+    return;
+  }
+
+  el.innerHTML=filtered.map(t=>{
+    let dtCls='sn',dtLbl='';
+    if(t.dt){
+      if(t.dt<today){dtCls='ov';dtLbl='⚠️ Просрочено'}
+      else if(t.dt===today){dtCls='td';dtLbl='Сегодня'}
+      else if(t.dt===tomorrow){dtCls='sn';dtLbl='Завтра'}
+      else{dtCls='ok';dtLbl=new Date(t.dt+'T00:00:00').toLocaleDateString('ru-RU',{day:'2-digit',month:'short'})}
+    }
+    return `<div class="t-item${t.done?' done':''}">
+      <div class="t-top">
+        <div class="t-chk" onclick="toggleTask(${t.id})">${t.done?'✓':''}</div>
+        <div class="t-txt">${t.txt}</div>
+        <button class="t-del" onclick="delTask(${t.id})">✕</button>
+      </div>
+      <div class="t-meta2">
+        ${t.co?`<span class="t-co">🏢 ${t.co}</span>`:''}
+        ${t.dt?`<span class="t-date ${dtCls}">${dtLbl}</span>`:''}
+        <span class="t-pri ${t.pri}">${{hi:'🔴 Высокий',md:'🟡 Средний',lo:'🟢 Низкий'}[t.pri]||''}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function updateBadge(){
+  const today=new Date().toISOString().split('T')[0];
+  const n=TASKS.filter(t=>!t.done&&t.dt&&t.dt<=today).length;
+  const b=document.getElementById('t-badge');
+  if(n>0){b.style.display='flex';b.textContent=n>9?'9+':n}
+  else{b.style.display='none'}
+}
+
+// ═══════════════════════════════════
+// CYCLE
+// ═══════════════════════════════════
+function renderCycle(){
+  const el=document.getElementById('cy-content');
+  const sub=document.getElementById('cy-sub');
+  if(!curInd){
+    sub.textContent='Выберите отрасль в Сборщике';
+    el.innerHTML=`<div class="empty"><div class="empty-ico">📅</div><div class="empty-ttl">Отрасль не выбрана</div><div class="empty-sb">Перейдите в Сборщик и выберите вашу сферу</div></div>`;
+    return;
+  }
+  const ind=IND[curInd];
+  sub.textContent=ind.label+' — 6 касаний';
+  const steps=ind.cycle||[];
+  el.innerHTML=`
+    <div class="cy-card">
+      <div class="cy-hd">🎯 Цикл для: ${ind.label}</div>
+      <div class="cy-steps">${steps.map((s,i)=>`
+        <div class="cy-step">
+          <div class="cy-dot">${i+1}</div>
+          <div><div class="cy-day">${s.day}</div><div class="cy-act">${s.act}</div><div class="cy-note">${s.note}</div></div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div class="rule-card">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin-bottom:4px">Универсальные правила</div>
+      <div class="rule"><div class="rico">⏰</div><div><div class="rt">Тайминг звонков</div><div class="rd">Оптимально — вт/ср/чт с 10 до 12 и с 15 до 17. Избегайте пн утра и пт после обеда</div></div></div>
+      <div class="rule"><div class="rico">💬</div><div><div class="rt">WhatsApp</div><div class="rd">Отправляйте в рабочее время. Сообщение — до 3 предложений + чёткий вопрос</div></div></div>
+      <div class="rule"><div class="rico">📧</div><div><div class="rt">Email</div><div class="rd">Тема — конкретная польза. Письмо — до 5 строк. Один CTA в конце</div></div></div>
+      <div class="rule"><div class="rico">🔄</div><div><div class="rt">После цикла</div><div class="rd">Если нет ответа после 6 касаний — пауза 3 месяца, затем новый цикл с другим поводом</div></div></div>
+    </div>
+    <div class="g8"></div>`;
+}
+
+// ═══════════════════════════════════
+// DOSSIER
+// ═══════════════════════════════════
+async function loadDos(){
+  const raw=document.getElementById('dos-inn').value.replace(/\D/g,'');
+  if(raw.length!==10&&raw.length!==12){toast('ИНН — 10 или 12 цифр');return}
+  const ldr=document.getElementById('dos-ldr');
+  const cont=document.getElementById('dos-content');
+  ldr.style.display='block'; cont.innerHTML='';
+  try{
+    const res=await fetch('https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById/party',{
+      method:'POST',mode:'cors',
+      headers:{'Content-Type':'application/json','Accept':'application/json','Authorization':'Token '+DDT,'X-Secret':DDS},
+      body:JSON.stringify({query:raw,count:1})
+    });
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const data=await res.json();
+    const item=data.suggestions?.[0];
+    if(!item) throw new Error('Компания не найдена');
+    const d=item.data,ad=d.address?.data||{},st=d.state||{};
+
+    const mkv=(lbl,val,cls='')=>val?`<div class="dos-row"><div class="dos-lbl">${lbl}</div><div class="dos-val ${cls}">${val}</div></div>`:'';
+
+    let fH='';
+    (d.founders||[]).slice(0,3).forEach((f,i)=>{
+      const n=i+1,nm=f.name||f.fio?.source||'—';
+      const sh=f.share?(f.share.numerator&&f.share.denominator?(f.share.numerator/f.share.denominator*100).toFixed(1)+'%':(f.share.value?f.share.value+'%':'—')):'—';
+      fH+=mkv(`Учредитель ${n}: ФИО`,nm)+mkv(`Учредитель ${n}: ИНН`,f.inn||'—')+mkv(`Учредитель ${n}: доля`,sh)+mkv(`Учредитель ${n}: тип`,f.type==='LEGAL'?'юр.лицо':'физ.лицо');
+    });
+
+    let mH='';
+    if(d.management){mH+=mkv('Руководитель 1: ФИО',d.management.name)+mkv('Руководитель 1: должность',d.management.post);}
+    (d.managers||[]).slice(0,2).forEach((m,i)=>{const n=i+2;mH+=mkv(`Руководитель ${n}: ФИО`,m.name||m.fio?.source)+mkv(`Руководитель ${n}: ИНН`,m.inn)+mkv(`Руководитель ${n}: должность`,m.post);});
+
+    const okEx=(d.okveds||[]).slice(1,6).map(o=>o.code+' — '+o.name).join('; ')||'—';
+    const lic=(d.licenses||[]).map(l=>l.activity+(l.status?' ['+l.status+']':'')).join('; ')||'—';
+    const capV=d.capital?.value?(d.capital.value/1000).toFixed(0)+' тыс ₽':'—';
+
+    const sec=[
+      {t:'🆔 Идентификаторы',r:mkv('ИНН',d.inn,'hi')+mkv('КПП',d.kpp)+mkv('ОГРН',d.ogrn)+mkv('Дата ОГРН',fmtDate(d.ogrn_date))+mkv('ОКПО',d.okpo)+mkv('ОКТМО',d.oktmo)+mkv('Тип',d.type)},
+      {t:'🏢 Наименование',r:mkv('Полное',d.name?.full)+mkv('Краткое',d.name?.short)+mkv('Полное с ОПФ',d.name?.full_with_opf)+mkv('Краткое с ОПФ',d.name?.short_with_opf)+mkv('Код ОПФ',d.opf?.code)+mkv('Полное ОПФ',d.opf?.full)},
+      {t:'📊 Статус',r:mkv('Статус',st.status==='ACTIVE'?'Действует ✓':st.status||'—',st.status==='ACTIVE'?'ok':'err')+mkv('Дата регистрации',fmtDate(st.registration_date))+mkv('Дата ликвидации',st.liquidation_date?fmtDate(st.liquidation_date):'—')+mkv('Актуальность',fmtDate(st.actuality_date))},
+      {t:'📍 Адрес',r:mkv('Адрес (полный)',d.address?.value)+mkv('Индекс',ad.postal_code)+mkv('Регион',ad.region_with_type)+mkv('Город',ad.city||ad.settlement)+mkv('Улица',ad.street_with_type)+mkv('Дом',ad.house)+mkv('Недостоверность',ad.fias_actuality_state==='INACTIVE'?'⚠️ Да':'Нет')},
+      {t:'⚙️ Деятельность',r:mkv('Сотрудников',d.employee_count?d.employee_count+' чел.':'—')+mkv('Сегмент',d.employee_count?empR(d.employee_count):'—')+mkv('Основной ОКВЭД',d.okved)+mkv('Описание ОКВЭД',d.okved_type)+mkv('Доп. ОКВЭДы',okEx)+mkv('Лицензии',lic)},
+      {t:'📞 Контакты',r:mkv('Телефон',d.phones?.[0]?.value)+mkv('Все телефоны',d.phones?.map(p=>p.value).join(', ')||'—')+mkv('Email',d.emails?.[0]?.value)+mkv('Все email',d.emails?.map(e=>e.value).join(', ')||'—')+mkv('Сайт',d.web?.[0]?.value||'—')},
+      {t:'👔 Руководство',r:mH||mkv('Руководитель',d.management?.name||'—')},
+      {t:'💼 Учредители',r:fH||mkv('Учредитель','—')},
+      {t:'💰 Капитал',r:mkv('Тип капитала',d.capital?.type||'—')+mkv('Уставной капитал',capV)+mkv('Налогообложение',d.finance?.tax_system||'—')+mkv('Категория МСП',d.sms_code||'—')},
+      {t:'📊 Финансы (ФНС)',r:'<div id="dos-fin"><div style="font-size:12px;color:var(--t3)">Загружаем данные ФНС…</div></div>'}
+    ];
+
+    cont.innerHTML=sec.map(s=>`
+      <div class="dos-card">
+        <div class="dos-sec-hd">${s.t}</div>
+        <div class="dos-rows">${s.r||'<div class="dos-val">—</div>'}</div>
+      </div>`).join('')+`<button class="dos-exp" onclick="expDos()">💾 Экспортировать в .txt</button><div class="g16"></div>`;
+
+    window._dosRaw={item,raw};
+    loadDosFin(d.inn||raw);
+  }catch(e){
+    cont.innerHTML=`<div class="dos-empty"><div class="dos-empty-ico">❌</div><div style="font-size:14px;font-weight:600;color:var(--err);margin-bottom:4px">Ошибка загрузки</div><div style="font-size:12px">${e.message}</div></div>`;
+  }finally{
+    ldr.style.display='none';
+  }
+}
+
+async function loadDosFin(inn){
+  const el=document.getElementById('dos-fin');
+  if(!el)return;
+  try{
+    const r1=await fetch(`https://bo.nalog.ru/nbo/organizations/search?query=${inn}&page=0`);
+    if(!r1.ok)throw new Error();
+    const d1=await r1.json();
+    const org=d1.content?.[0];
+    if(!org)throw new Error('not found');
+    const r2=await fetch(`https://bo.nalog.ru/nbo/organizations/${org.id}/bfo/`);
+    if(!r2.ok)throw new Error();
+    const d2=await r2.json();
+    const reps=Array.isArray(d2)?d2:d2.content||[];
+    const lat=reps.sort((a,b)=>(b.year||0)-(a.year||0))[0];
+    if(!lat)throw new Error('no data');
+    const mkv2=(l,v,c='')=>v!=null?`<div class="dos-row"><div class="dos-lbl">${l}</div><div class="dos-val ${c}">${v}</div></div>`:'';
+    const inc=lat.revenue||lat['2110'];
+    const exp=lat.expenses||lat['2120'];
+    const pro=lat.netAssets||lat['2400'];
+    el.innerHTML=
+      mkv2('Год отчётности',lat.year)+
+      (inc?mkv2('Выручка',fmtMoney(inc),'ok'):'')+
+      (exp?mkv2('Расходы',fmtMoney(exp),'err'):'')+
+      (pro?mkv2('Прибыль / чистые активы',fmtMoney(pro),pro>0?'ok':'err'):'')+
+      (org.taxDebt!=null?mkv2('Налоговая недоимка',org.taxDebt>0?'⚠️ '+fmtMoney(org.taxDebt):'Нет',org.taxDebt>0?'warn':'ok'):'')+
+      (org.fines?mkv2('Штрафы',fmtMoney(org.fines),'warn'):'');
+  }catch{
+    if(el) el.innerHTML='<div style="font-size:12px;color:var(--t3)">Данные ФНС недоступны для этой компании</div>';
+  }
+}
+
+function empR(n){
+  if(n<=15)return'Микро (до 15 чел.)';
+  if(n<=100)return'Малое (16–100 чел.)';
+  if(n<=250)return'Среднее (101–250 чел.)';
+  return'Крупное (250+ чел.)';
+}
+
+function expDos(){
+  if(!window._dosRaw)return;
+  const d=window._dosRaw.item.data;
+  const lines=['xPower Досье — '+d.name?.short,'ИНН: '+d.inn,'ОГРН: '+d.ogrn,'Адрес: '+(d.address?.value||'—'),'Руководитель: '+(d.management?.name||'—'),'Дата регистрации: '+fmtDate(d.state?.registration_date)];
+  const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`xpower_dos_${d.inn||'company'}.txt`;
+  a.click();
+  toast('Досье сохранено','ok');
+}
+
+// ═══════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════
+function parseFIO(full){
+  if(!full||full==='—')return{first:'',last:'',mid:''};
+  const parts=full.trim().split(/\s+/);
+  return{last:parts[0]||'',first:parts[1]||'',mid:parts[2]||''};
+}
+
+function fmtDate(ts){
+  if(!ts)return'—';
+  try{return new Date(ts).toLocaleDateString('ru-RU')}catch{return'—'}
+}
+
+function fmtMoney(n){
+  if(!n&&n!==0)return'—';
+  const abs=Math.abs(n);
+  if(abs>=1e9) return(n/1e9).toFixed(1)+' млрд ₽';
+  if(abs>=1e6) return(n/1e6).toFixed(1)+' млн ₽';
+  if(abs>=1e3) return(n/1e3).toFixed(0)+' тыс ₽';
+  return n.toLocaleString('ru-RU')+' ₽';
+}
+
+let _tT=null;
+function toast(msg,type=''){
+  const el=document.getElementById('toast');
+  clearTimeout(_tT);
+  el.textContent=msg;
+  el.className='toast'+(type?' '+type:'');
+  requestAnimationFrame(()=>{el.classList.add('show')});
+  _tT=setTimeout(()=>el.classList.remove('show'),2600);
+}
+
+// ═══════════════════════════════════
+// INIT
+// ═══════════════════════════════════
+(function init(){
+  // Restore industry
+  if(curInd&&IND[curInd]){
+    document.getElementById('ind-pill').textContent=IND[curInd].label;
+    document.querySelectorAll('.ic').forEach(c=>{if(c.dataset.ind===curInd)c.classList.add('sel')});
+    document.getElementById('btn-ind').disabled=false;
+  }
+  // Set today as default task date
+  document.getElementById('t-date').value=new Date().toISOString().split('T')[0];
+  // Badges
+  updateBadge();
+  // Show pages correctly
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  document.getElementById('pg-builder').style.display='block';
+})();
+</script>
+</body>
+</html>
